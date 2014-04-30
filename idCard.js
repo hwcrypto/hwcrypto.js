@@ -137,11 +137,6 @@ function checkIfPluginIsLoaded(pluginName, lang)
 	}
 }
 
-
-function getLoadedPlugin(){
-	return loadedPlugin;
-}
-
 function loadSigningPlugin(lang, pluginToLoad){
 
 	var pluginHTML = {
