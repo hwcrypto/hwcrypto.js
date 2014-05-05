@@ -209,6 +209,10 @@ function getISO6391Language(lang)
     return languageMap[lang];
 }
 
+function getType() {
+    return 'SYNC';
+}
+
 function digidocPluginHandler(lang)
 {
 	var plugin = document.getElementById('IdCardSigning');
