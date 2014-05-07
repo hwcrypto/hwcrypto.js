@@ -16,11 +16,21 @@
             return document.getElementById('pluginLanguage').value;
         }
 
-		function loadPlugin(){
-			document.getElementById('error').innerHTML = '';
-    		loadSigningPlugin(getSelectedLanguage());
-            new IdCardPluginHandler(getSelectedLanguage()).getVersion(showVersion, showError);
-			document.getElementById('libraryVersion').innerHTML = libraryVersion;
+		function loadPlugin(){			
+			try {		
+				document.getElementById('error').innerHTML = '';
+	    		loadSigningPlugin(getSelectedLanguage());
+	            new IdCardPluginHandler(getSelectedLanguage()).getVersion(showVersion, showError);
+	            document.getElementById('type').innerHTML = getType();
+				document.getElementById('libraryVersion').innerHTML = libraryVersion;	
+			}
+			catch (ex) {
+	            if (ex instanceof IdCardException) {
+	                document.getElementById('error').innerHTML = '[Error code: ' + ex.returnCode + '; Error: ' + ex.message + ']';
+	            } else {
+	                document.getElementById('error').innerHTML = ex.message != undefined ? ex.message : ex;
+	            }
+			}
 		}
 
         function getCert() {
@@ -63,7 +73,7 @@
 <TABLE border=1 cellPadding=5>
   <TBODY>
   <TR>
-    <TH colSpan=2>Digital signing in web browser (Plug-in version: <span id="version"></span>; library version: <span id="libraryVersion"></span>)</TH></TR>
+    <TH colSpan=2>Digital signing in web browser (Plug-in version: <span id="version"></span>; plug-in type: <span id="type"></span>;  library version: <span id="libraryVersion"></span>)</TH></TR>
   <TR>
     <TD>1</TD>
     <TD>User is offered the possibility to sign some data on a web page. User confirms the data to be signed and initiates signing process.</TD></TR>
@@ -78,6 +88,7 @@
             <option value='est'>Estonian</option>
             <option value='eng'>English</option>
             <option value='rus'>Russian</option>
+            <option value='lit'>Lithuanian</option>
         </select>
     </TD></TR>
   <TR>
