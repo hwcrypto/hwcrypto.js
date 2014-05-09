@@ -202,7 +202,7 @@ function loadSigningPlugin(lang, pluginToLoad){
 // Returns ISO 639-1 compatible two-letter language code
 function getISO6391Language(lang)
 {
-    var languageMap = {est: 'et', eng: 'en', rus: 'ru', et: 'et', en: 'en', ru: 'ru'};
+    var languageMap = {est: 'et', eng: 'en', rus: 'ru', lit: 'lt', et: 'et', en: 'en', ru: 'ru', lt: 'lt'};
     return languageMap[lang];
 }
 
