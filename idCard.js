@@ -7,9 +7,8 @@
  *				- Added variable 'libraryVersion' which specifies the idCard.js library's version. It is strongly recommended to write the version information to log file during signature creation - additional information is provided in the documentation.
  *				- Added method getType() which returns the signing module's type (asynchronous or synchronous). It is strongly recommended to write the type information to log file during signature creation - additional information is provided in the documentation.
  *				- User manual "JavaScript library for Signing in Web Browsers" is now available in English.
- * 		sign.html 	- sign-*.html sample application is now available in English.
+ * 		sign.html 	- sign.html sample application is now available in English.
  * 				- changed the DigiDocService web service related steps to 'optional'
- * 				- added version number to the file name, the number is set according to the idCard.js library's version (e.g. sign-0.20.html).
  * 				- added idCard.js library's version to the heading section of the sample.
  * 				- added the signing module's type information to the heading section of the sample.
  * 				- added Lithuanian to the language selection dropdown.
