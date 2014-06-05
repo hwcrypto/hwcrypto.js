@@ -1,0 +1,6 @@
+idCard.js JavaScript library release notes
+
+--------------------------------------
+
+The realease notes are provided in idCard.js file's header section.
+
