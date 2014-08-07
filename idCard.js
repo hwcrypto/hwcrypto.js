@@ -43,7 +43,7 @@
 /* ------------------------------------ */
 
 //  version of the idCard.js library
-var libraryVersion = '0.20'; 
+var libraryVersion = '0.21'; 
 
 var Certificate = {
     id: null,
@@ -53,17 +53,17 @@ var Certificate = {
     keyUsage: null,
     validFrom: "", // Certificate's "valid from" date, in format dd.mm.yyyy hh:mm:ss (Zulu time-zone)
     validTo: null // Certificate's "valid to" date, in format dd.mm.yyyy hh:mm:ss (Zulu time-zone)
-}
+};
 
 var getCertificatesResponse = {
     certificates: [],
     returnCode: 0
-}
+};
 
 var SignResponse = {
     signature: null,
     returnCode: 0
-}
+};
 
 //1..99 are error codes returned by the signing module
 var dictionary = {
@@ -77,7 +77,7 @@ var dictionary = {
 	17: {est: 'Vigane räsi',						eng: 'Invalid hash',					lit: 'Neteisinga santrauka',					rus: 'Неверный хеш'},
 	19: {est: 'Veebis allkirjastamise käivitamine on võimalik vaid https aadressilt',		eng: 'Web signing is allowed only from https:// URL',					lit: 'Web signing is allowed only from https:// URL',					rus: 'Подпись в интернете возможна только с URL-ов, начинающихся с https://'},
 	100: {est: 'Teie arvutist puudub allkirjastamistarkvara või ei ole Teie operatsioonisüsteemi ja brauseri korral veebis allkirjastamine toetatud. Allkirjastamistarkvara saate aadressilt https://installer.id.ee',		eng: 'Web signing module is missing from your computer or web signing is not supported on your operating system and browser platform. Signing software is available from https://installer.id.ee',		lit: 'Web signing module is missing from your computer or web signing is not supported on your operating system and browser platform. Signing software is available from https://installer.id.ee',				rus: 'На вашем компьютере отстутствует модуль для цифровой подписи в интернете или цифровая подпись в интернете не поддерживается вашей операционной системой и/или браузером. Программное обеспечение доступно здесь: https://installer.id.ee'}
-}
+};
 
 // Variable for internal use in idCard.js
 var loadedPlugin = '';
@@ -91,11 +91,11 @@ function IdCardException(returnCode, message) {
 
     this.isError = function () {
         return this.returnCode != 1;
-    }
+    };
 
     this.isCancelled = function () {
         return this.returnCode == 1;
-    }
+    };
 }
 
 // This function is meant for internal use, do not use in client code. 
@@ -127,6 +127,7 @@ function checkIfPluginIsLoaded(pluginName, lang)
 		}
 		catch (ex)
 		{
+			//console.error(ex);
 		}
 
 		return false;
@@ -139,16 +140,10 @@ function checkIfPluginIsLoaded(pluginName, lang)
 
 // Loads the signing module to browser
 function loadSigningPlugin(lang, pluginToLoad){
-
+	lang = lang || 'eng';
 	var pluginHTML = {
 		digidocPlugin:	'<object id="IdCardSigning" type="application/x-digidoc" style="width: 1px; height: 1px; visibility: hidden;"></object>'
-	}
-	var plugin;
-
-	if (!lang || lang == undefined)
-	{
-		lang = 'eng';
-	}
+	};
 
 	// It is checked if the connection is https during the signing module loading
 	if (document.location.href.indexOf("https://") == -1)
@@ -214,11 +209,9 @@ function getType() {
 function digidocPluginHandler(lang)
 {
 	var plugin = document.getElementById('IdCardSigning');
-
-    plugin.pluginLanguage = getISO6391Language(lang);
-
+    plugin.pluginLanguage = getISO6391Language(lang) || 'en';
 	this.getCertificate = function () {
-		var TempCert;
+		var TempCert = undefined;
 		var response;
 		var tmpErrorMessage;
 
@@ -228,7 +221,7 @@ function digidocPluginHandler(lang)
 		}
 		catch (ex)
 		{
-
+			//console.error(ex);
 		}
 
 		if (plugin.errorCode != "0")
@@ -259,13 +252,12 @@ function digidocPluginHandler(lang)
 			   '})';
 				response = eval('' + response);
 				return response;
-		} else {
-			return TempCert;
-		}
-	}
+		} 
+		return TempCert;
+	};
 
 	this.sign = function (id, hash ) {
-		var response;
+		var response = null;
 		var tmpErrorMessage;
 
 		try
@@ -273,7 +265,9 @@ function digidocPluginHandler(lang)
 			response = plugin.sign(id, hash, "");
 		}
 		catch (ex)
-		{}
+		{
+			//console.error(ex);
+		}
 
 		if (plugin.errorCode != "0")
 		{
@@ -290,14 +284,13 @@ function digidocPluginHandler(lang)
 			throw new IdCardException(parseInt(plugin.errorCode), tmpErrorMessage);
 		}
 
-
 		if (response == null || response == undefined || response == "")
 		{
 			response = '({' + 'signature: "",' + 'returnCode: 14' + '})';
 		}
 		else
 		{
-			response = '({' + 'signature: "' + response + '",' + 'returnCode:0' + '})'
+			response = '({' + 'signature: "' + response + '",' + 'returnCode:0' + '})';
 		}
 
 		response = eval('' + response);
@@ -306,28 +299,22 @@ function digidocPluginHandler(lang)
             throw new IdCardException(response.returnCode, dictionary[response.returnCode][lang]);
         }
         return response.signature;
-	}
+	};
 
 	this.getVersion = function () {
 		return plugin.version;
-	}
+	};
 }
 
 // Provides the main functionality for signature creation
 function IdCardPluginHandler(lang)
 {
-	var plugin = document.getElementById('IdCardSigning');
+	lang = lang || 'eng';
 	var pluginHandler = null;
-	var response = null;
-
-	if (!lang || lang == undefined)
-	{
-		lang = 'eng';
-	}
 
 	this.choosePluginHandler = function () {
 	    return new digidocPluginHandler(lang);
-	}
+	};
 
     // Get the signer's certificate from the smart card
 	this.getCertificate = function (successCallback, failureCallback) {
@@ -339,7 +326,7 @@ function IdCardPluginHandler(lang)
         } catch (e) {
             failureCallback(e);
         }
-	}
+	};
 
 	// Get the signature value from the smart card
 	this.sign = function (id, hash, successCallback, failureCallback) {
@@ -351,7 +338,7 @@ function IdCardPluginHandler(lang)
         } catch (e) {
             failureCallback(e);
         }
-	}
+	};
 
 	// Get the signing module's version
 	this.getVersion = function (successCallback, failureCallback) {
@@ -363,6 +350,6 @@ function IdCardPluginHandler(lang)
         } catch (e) {
             failureCallback(e);
         }
-	}
+	};
 
-}
+};
