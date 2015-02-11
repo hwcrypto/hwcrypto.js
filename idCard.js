@@ -1,6 +1,9 @@
 ﻿
 /*
- * JavaScript library for signing in web browsers - version 0.20
+ * JavaScript library for signing in web browsers - version 0.21
+ * 
+ * August 2014 (client library ver 0.21)
+ * 		idCard.js - fixed syntax errors according to feedback. 
  * 
  * April 2014 (client library ver 0.20)
  * 		idCard.js 	- Changed IdCardPluginHandler methods getCertificate(), sign() and getVersion() API and behaviour - the methods must now be used asynchronously with callback functions. Users of 0.14 version need to make changes in the client code to continue using the library (see also user manual for more information). 
@@ -352,4 +355,4 @@ function IdCardPluginHandler(lang)
         }
 	};
 
-};
+}
