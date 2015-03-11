@@ -1,0 +1,21 @@
+{
+  "name": "js-token-signing",
+  "version": "0.21",
+  "homepage": "https://github.com/kristoaun/js-token-signing",
+  "authors": [
+    "Kristo Aun <kristoaun@live.com>"
+  ],
+  "description": "IDCard.js clone to enable bower distribution",
+  "main": "idCard.js",
+  "keywords": [
+    "idcard.js"
+  ],
+  "license": "BSD",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
