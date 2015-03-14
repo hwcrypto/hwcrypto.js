@@ -1,0 +1,58 @@
+<!DOCTYPE>
+<html>
+<head>
+	<script type="text/javascript" src="../bower_components/chai/chai.js"></script>
+	<script type="text/javascript" src="../bower_components/chai-as-promised/lib/chai-as-promised.js"></script>
+	<script type="text/javascript" src="../bower_components/mocha/mocha.js"></script>
+	<script type="text/javascript" src="../bower_components/should.js/should.js"></script>
+	<script type="text/javascript" src="../npo.js"></script>
+	<link rel="stylesheet" href="../bower_components/mocha/mocha.css" />
+	<script src="../hwcrypto.js"></script>
+</head>
+</html>
+<body>
+	<script>
+		function shoot() {
+			// Select backend
+			var backend =  document.getElementById('backend').value;
+			if (backend === 'default') {
+				window.hwcrypto.autodetect();
+			} else if (backend === 'ddn') {
+				window.hwcrypto.use(window.hwcrypto.digidoc_plugin);
+			} else if (backend === 'swn') {
+				window.hwcrypto.use(window.hwcrypto.signwise_plugin);
+			} else if (backend === 'swc') {
+				window.hwcrypto.use(window.hwcrypto.signwise_chrome);
+			} else if (backend === 'ddc') {
+				window.hwcrypto.use(window.hwcrypto.digidoc_chrome);
+			}
+			document.getElementById('trigger').disabled = true;
+			if (window.mochaPhantomJS) {
+				mochaPhantomJS.run();
+			} else {
+				mocha.run();
+			}	
+		}
+	</script>
+
+	<!-- Include the actual tests. -->
+	<script>
+		mocha.ui('bdd');
+//		mocha.reporter('html');
+		expect = chai.expect;
+		should = chai.should();
+	</script>
+	<script src="backend.test.js"></script>
+	<select id="backend">
+		<option value="default">autodetect</option>
+		<option value="ddn">application/x-digidoc</option>
+		<option value="swn">application/x-signwiseplugin</option>
+		<option value="ddc">chrome-token-signing</option>
+		<option value="swc">signwise-chrome</option>
+	</select>
+	<button id="trigger" onclick="shoot()">Test</button>
+
+	<div id="mocha"></div>
+
+</body>
+</html>

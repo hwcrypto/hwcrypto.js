@@ -1,0 +1,45 @@
+<!DOCTYPE>
+<html>
+<head>
+	<!-- TODO: requires for promises via 'grunt mocha'. Remove when upgraded to phantomjs2 -->
+	<!-- See https://github.com/ariya/phantomjs/issues/10522#issuecomment-72705402 -->
+	<script type="text/javascript" src="js/index.js"></script>
+	<script type="text/javascript" src="js/lib/npo.src.js"></script>
+	<script type="text/javascript" src="js/chai.js"></script>
+	<script type="text/javascript" src="js/lib/chai-as-promised.js"></script>
+	<script type="text/javascript" src="js/mocha.js"></script>
+	<script type="text/javascript" src="js/should.js"></script>
+	<link rel="stylesheet" href="css/mocha.css" />
+</head>
+</html>
+<body>
+	<p>This is a
+   <b><script>document.write(window.location.protocol.substring(0, window.location.protocol.length-1).toUpperCase());</script></b> test page for 
+   <a href="hwcrypto.js">hwcrypto.js</a> (<a href="https://github.com/open-eid/hwcrypto.js/wiki">more information</a>)
+   implementing <a href="https://github.com/open-eid/hwcrypto.js/wiki/ModernAPI">API v0.1</a>
+</p>
+<p>
+Switch to: 
+  <a href="http://open-eid.github.io/hwcrypto.js/sign.html">HTTP</a> | <a href="https://open-eid.github.io/hwcrypto.js/sign.html">HTTPS</a>
+  | <a href="okbrowser.html">browser with module</a> | <a href="nokbrowser.html">browser without module</a> | <a href="success.html">success</a>  
+</p>
+<hr>
+
+	<div id="mocha"></div>
+	<!-- Include the actual tests. -->
+	<script>
+		mocha.ui('bdd');
+	</script>
+	<script src="hwcrypto.js"></script>
+	<script src="okbrowser.js"></script>
+
+	<script>
+		if (window.mochaPhantomJS) {
+			mochaPhantomJS.run();
+		} else {
+			mocha.run();
+		}
+	</script>
+</body>
+</html>
+

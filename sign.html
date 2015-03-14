@@ -1,0 +1,137 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>hwcrypto.js</title>
+  <script src="gitversion.js"></script>
+  <script src="hwcrypto-legacy.js"></script>
+  <script src="hwcrypto.js"></script>
+  <script src="js/dist/jquery.js"></script>
+  <script src="hex2base.js"></script>
+  <style type="text/css">
+    body {font-family: Georgia, serif;}
+  </style>
+  
+  <script>
+    var hashes = {};
+    hashes['SHA-1'] = 'c33df55b8aee82b5018130f61a9199f6a9d5d385';
+    hashes['SHA-224'] = '614eadb55ecd6c4938fe23a450edd51292519f7ffb51e91dc8aa5fbe';
+    hashes['SHA-256'] = '413140d54372f9baf481d4c54e2d5c7bcf28fd6087000280e07976121dd54af2';
+    hashes['SHA-384'] = '71839e04e1f8c6e3a6697e27e9a7b8aff24c95358ea7dc7f98476c1e4d88c67d65803d175209689af02aa3cbf69f2fd3';
+    hashes['SHA-512'] = 'c793dc32d969cd4982a1d6e630de5aa0ebcd37e3b8bd0095f383a839582b080b9fe2d00098844bd303b8736ca1000344c5128ea38584bbed2d77a3968c7cdd71';
+    hashes['SHA-192'] = 'ad41e82bcff23839dc0d9683d46fbae0be3dfcbbb1b49c70';
+
+    function log_text(s) {
+      var d = document.createElement("div");
+      d.innerHTML = s;
+      document.getElementById('log').appendChild(d);
+    }
+
+    function debug() {
+    	window.hwcrypto.debug().then(function(response) {log_text("Debug: " + response);});
+    }
+    function sign() {
+    // Clear log
+    document.getElementById('log').innerHTML = '';
+    // Timestamp
+    log_text("sign() clicked on " + new Date().toUTCString());
+    // Select hash
+    var hashtype = $("input[name=hash]:checked").val();
+    // Set backend if asked
+    var backend =  $("input[name=backend]:checked").val()
+    // get language
+    var lang = $("input[name=lang]:checked").val();
+    if (!window.hwcrypto.use(backend)) {
+      log_text("Selecting backend failed.");
+    }
+
+   var hash = $("#hashvalue").val();
+   log_text("Signing " + hashtype + ": " + hash);
+    // debug
+    window.hwcrypto.debug().then(function(response) {
+      log_text("Debug: " + response);
+    }, function(err) {
+      log_text("debug() failed: " + err);
+      return;
+    });
+    // Sign
+    window.hwcrypto.getCertificate({lang: lang}).then(function(response) {
+      var cert = response;
+      log_text("Using certificate:\n" + hexToPem(response.hex));
+      window.hwcrypto.sign(cert, {type: hashtype, hex: hash}, {lang: lang}).then(function(response) {
+        log_text("Generated signature:\n" + response.hex.match(/.{1,64}/g).join("\n"));
+      }, function(err) {
+        log_text("sign() failed: " + err);
+      });
+    }, function(err) {
+      log_text("getCertificate() failed: " + err);
+    });
+  }
+
+
+</script>
+</head>
+<body>
+  <noscript><h1>Plase enable JavaScript!</h1></noscript>
+  <script>
+    $(document).ready(function() {
+       $("#scripton").show();
+       $("input[type=radio][name=hash]").change(function() {
+         $("#hashvalue").val(hashes[$("input[name=hash]:checked").val()]);
+       });
+       $("#hashvalue").val(hashes[$("input[name=hash]:checked").val()]);
+    });
+  </script>
+  <div id="scripton" style="display: none">
+   <p>This is a
+   <b><script>document.write(window.location.protocol.substring(0, window.location.protocol.length-1).toUpperCase());</script></b> test page for 
+   <a href="hwcrypto.js">hwcrypto.js</a> (<a href="https://github.com/open-eid/hwcrypto.js/wiki">more information</a>)
+   implementing <a href="https://github.com/open-eid/hwcrypto.js/wiki/ModernAPI">API v0.1</a>
+</p>
+<p>
+Switch to: 
+  <a href="http://open-eid.github.io/hwcrypto.js/sign.html">HTTP</a> | <a href="https://open-eid.github.io/hwcrypto.js/sign.html">HTTPS</a>
+  | <a href="okbrowser.html">browser with module</a> | <a href="nokbrowser.html">browser without module</a> | <a href="success.html">success</a>  
+</p>
+<hr>
+
+   <h1>sign()</h1>
+   <p>You can get old NPAPI plugins from: <a href="https://installer.id.ee">installer.id.ee</a></p>
+   <p><a href="https://chrome.google.com/webstore/detail/ckjefchnfjhjfedoccjbhjpbncimppeg">Install extension from chrome web store</a></p>
+
+   Choose parameters:
+   <ul>
+   <li><b>HASH</b>:
+
+     <input type="radio" name="hash" value="SHA-1">SHA-1
+     <input type="radio" name="hash" value="SHA-224">SHA-224
+     <input type="radio" name="hash" value="SHA-256" checked>SHA-256
+     <input type="radio" name="hash" value="SHA-384">SHA-384
+     <input type="radio" name="hash" value="SHA-512">SHA-512 
+     <input type="radio" name="hash" value="SHA-192">"SHA-192" (erronoeus) 
+     <br/>
+     <input id="hashvalue" type="text" size="200">
+   </li>
+
+   <li><b>LANGUAGE</b>:
+     <input type="radio" name="lang" value="en" checked>English
+     <input type="radio" name="lang" value="et">eesti
+     <input type="radio" name="lang" value="ru">русский
+     <input type="radio" name="lang" value="sw">Swahili
+   </li>
+   <li><b>BACKEND</b>:
+     <input type="radio" name="backend" value="auto" checked>autodetect
+     <input type="radio" name="backend" value="npapi">legacy NPAPI
+     <input type="radio" name="backend" value="chrome">chrome-token-signing
+   </li>
+   </ul>
+   <p><button id="click1" onclick='sign();'>Click here to invoke <b>sign()</b></button></p>
+   <p><button id="click2" onclick='debug();'>Brief debug()</button></p>
+
+
+   <hr>
+   <script>document.write("<pre>This is sign.html " + publishedGitVersion + " running on\n" + navigator.userAgent + "</pre>");</script>
+   <div id="log" style="white-space: pre; font-family: monospace;"></div>
+ </div>
+</body>
+</html>
