@@ -16,7 +16,6 @@
   ],
   "license": "MIT",
   "homepage": "https://github.com/open-eid/js-token-signing.git",
-  "private": true,
   "repository": {
     "type": "git",
     "url": "git://github.com/open-eid/js-token-signing.git"
