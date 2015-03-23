@@ -82,7 +82,8 @@
   </script>
   <div id="scripton" style="display: none">
    <h1>sign()</h1>
-   <p>This is a test page for <a href="hwcrypto.js">hwcrypto.js</a> (<a href="https://github.com/open-eid/js-token-signing/wiki">more information</a>)
+   <p>This is a
+   <b><script>document.write(window.location.protocol.substring(0, window.location.protocol.length-1).toUpperCase());</script></b> test page for <a href="hwcrypto.js">hwcrypto.js</a> (<a href="https://github.com/open-eid/js-token-signing/wiki">more information</a>)
      implementing <a href="https://github.com/open-eid/js-token-signing/wiki/ModernAPI">API v0.1</a>
    </p>
 
@@ -103,9 +104,7 @@
      <input id="hashvalue" type="text" size="200">
    </li>
 
-   
-
-   <li><b>LANGUAUE</b>: 
+   <li><b>LANGUAGE</b>:
      <input type="radio" name="lang" value="en" checked>English
      <input type="radio" name="lang" value="et">eesti
      <input type="radio" name="lang" value="ru">русский
@@ -117,7 +116,8 @@
      <input type="radio" name="backend" value="chrome">chrome-token-signing
    </li>
    </ul>
-   <p><button onclick='sign();'>Click here to invoke <b>sign()</b></button></p>
+   <p><button id="click1" onclick='sign();'>Click here to invoke <b>sign()</b></button></p>
+
 
    <hr>
    <script>document.write("<pre>This is sign.html " + publishedGitVersion + " running on\n" + navigator.userAgent + "</pre>");</script>
