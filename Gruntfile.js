@@ -83,6 +83,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
 
     // Default task(s).
-    grunt.registerTask('build', ['clean', 'bower', 'includereplace', 'uglify']);
+    grunt.registerTask('build', ['jshint', 'clean', 'bower', 'includereplace', 'uglify']);
     grunt.registerTask('default', ['build', 'mocha']);
 };

@@ -80,6 +80,7 @@ var hwcrypto = (function hwcrypto() {
     });
     // Backend for DigiDoc plugin
     function digidoc_plugin() {
+            /* jshint validthis: true */
             this._name = "NPAPI/BHO for application/x-digidoc";
             var p = loadPluginFor(digidoc_mime);
             // keeps track of detected certificates and their ID-s
@@ -126,7 +127,7 @@ var hwcrypto = (function hwcrypto() {
                 return new Promise(function(resolve, reject) {
                     try {
                         var v = p.getCertificate();
-                        if(parseInt(p.errorCode) != 0) {
+                        if(parseInt(p.errorCode) !== 0) {
                             reject(code2err(p.errorCode));
                         } else {
                             // Store plugin-internal ID
@@ -167,6 +168,7 @@ var hwcrypto = (function hwcrypto() {
         }
         // Backend for Digidoc Chrome Extension
     function digidoc_ext() {
+        /* jshint validthis: true */
         this._name = "Chrome native messaging extension";
         var p = null;
         this.check = function() {
@@ -178,7 +180,7 @@ var hwcrypto = (function hwcrypto() {
             } else {
                 return false;
             }
-        }
+        };
         this.getVersion = function() {
             return p.getVersion();
         };
@@ -192,20 +194,21 @@ var hwcrypto = (function hwcrypto() {
 
     // Dummy
     function no_backend() {
-            this._name = "No implementation";
-            this.check = function() {
-                return true;
-            }
-            this.getVersion = function() {
-                return Promise.reject(new Error(NO_IMPLEMENTATION));
-            }
-            this.getCertificate = function() {
-                return Promise.reject(new Error(NO_IMPLEMENTATION));
-            }
-            this.sign = function() {
-                return Promise.reject(new Error(NO_IMPLEMENTATION));
-            }
-        }
+        /* jshint validthis: true */
+        this._name = "No implementation";
+        this.check = function() {
+            return true;
+        };
+        this.getVersion = function() {
+            return Promise.reject(new Error(NO_IMPLEMENTATION));
+        };
+        this.getCertificate = function() {
+            return Promise.reject(new Error(NO_IMPLEMENTATION));
+        };
+        this.sign = function() {
+            return Promise.reject(new Error(NO_IMPLEMENTATION));
+        };
+    }
     // Active backend
     var _backend = null;
     // To be exposed
@@ -238,10 +241,10 @@ var hwcrypto = (function hwcrypto() {
             if(_testAndUse(digidoc_plugin)) return true;
         }
         return _testAndUse(no_backend);
-    };
+    }
     // Use a specific backend or autodetect
     fields.use = function(backend) {
-        if(typeof backend == undefined || backend === 'auto') {
+        if(typeof backend === undefined || backend === 'auto') {
             return _autodetect();
         } else {
             if(backend === "chrome") {
@@ -273,7 +276,7 @@ var hwcrypto = (function hwcrypto() {
         }
         // If options does not specify a language, set to 'en'
         if(options && !options.lang) {
-            options['lang'] = 'en';
+            options.lang = 'en';
         }
         if(!_backend) {
             _autodetect();
@@ -290,7 +293,7 @@ var hwcrypto = (function hwcrypto() {
             return Promise.reject(new Error(INVALID_ARGUMENT));
         // If options does not specify a language, set to 'en'
         if(options && !options.lang) {
-            options['lang'] = 'en';
+            options.lang = 'en';
         }
         if(!_backend) {
             _autodetect();

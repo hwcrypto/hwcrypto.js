@@ -1,3 +1,4 @@
+/* jshint expr: true */
 describe('window.hwcrypto', function(){
 	mocha.ui('bdd');
     var expect = chai.expect;
