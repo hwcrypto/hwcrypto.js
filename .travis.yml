@@ -10,4 +10,4 @@ before_script:
   - bower install
 
 script:
-  - grunt mocha
+  - grunt
