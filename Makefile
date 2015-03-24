@@ -13,7 +13,7 @@ publish:
 	# run Grunt (includes tests)
 	grunt
 	# Have Git version available in a JS file
-	echo "var publishedGitVersion='`git describe --tags --always`';" > gitversion.js	
+	echo "var publishedGitVersion='`git describe --tags --always`';" > dist/gitversion.js
 	# copy built pages
 	mv dist/* gh-pages
 	# push to github pages

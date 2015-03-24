@@ -34,7 +34,8 @@ module.exports = function(grunt) {
                 files: [
                     {src: 'sign.html', dest: 'dist/', expand: true, cwd: 'demo'},
                     {src: '*.html', dest: 'dist/', expand: true, cwd: 'test'},
-                    {src: '*.js', dest: 'dist/', expand: true, cwd: 'test'}
+                    {src: '*.js', dest: 'dist/', expand: true, cwd: 'test'},
+                    {src: 'hex2base.js', dest: 'dist/'}
                 ]
             }
         },
