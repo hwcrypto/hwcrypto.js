@@ -52,6 +52,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-connect');
     // testing
     grunt.loadNpmTasks('grunt-mocha');
+    // version number syncing before releasing
+    grunt.loadNpmTasks('grunt-sync-pkg');
 
     // Default task(s).
     grunt.registerTask('default', ['mocha']);
