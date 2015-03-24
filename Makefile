@@ -8,6 +8,8 @@ publish:
 	test -d gh-pages || git clone git@github.com:open-eid/js-token-signing.git -b gh-pages gh-pages
 	# make sure it is clean
 	(cd gh-pages && git reset --hard && git clean -dfx && git rm -rf *)
+	# make sure all bower components are available
+	bower install
 	# copy files to be published
 	cp -rv bower_components gh-pages
 	cp -rv test gh-pages
