@@ -248,6 +248,8 @@ var hwcrypto = (function hwcrypto() {
                 return _testAndUse(digidoc_ext);
             } else if(backend === "npapi") {
                 return _testAndUse(digidoc_plugin);
+            } else {
+                return false; // unknown backend
             }
         }
     };
