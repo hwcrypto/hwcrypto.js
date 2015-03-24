@@ -57,7 +57,7 @@ var hwcrypto = (function hwcrypto() {
     var digidoc_chrome = 'TokenSigning';
     // Some error strings
     var USER_CANCEL = "user_cancel";
-    var NO_CERTIFICATES_FOUND = "no_certificates";
+    var NO_CERTIFICATES = "no_certificates";
     var INVALID_ARGUMENT = "invalid_argument";
     var TECHNICAL_ERROR = "technical_error";
     var NO_IMPLEMENTATION = "no_implementation";
@@ -303,7 +303,7 @@ var hwcrypto = (function hwcrypto() {
     fields.NO_IMPLEMENTATION = NO_IMPLEMENTATION;
     fields.USER_CANCEL = USER_CANCEL;
     fields.NOT_ALLOWED = NOT_ALLOWED;
-    fields.NO_CERTIFICATES_FOUND = NO_CERTIFICATES_FOUND;
+    fields.NO_CERTIFICATES = NO_CERTIFICATES;
     fields.TECHNICAL_ERROR = TECHNICAL_ERROR;
     fields.INVALID_ARGUMENT = INVALID_ARGUMENT;
     return fields;
