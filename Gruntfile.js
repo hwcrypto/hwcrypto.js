@@ -38,7 +38,7 @@ module.exports = function(grunt) {
                 options: {
                     keepalive: true,
                     port: 8888,
-                    open: 'http://localhost:8888/test/test.html'
+                    open: 'http://localhost:8888/test/okbrowser.html'
                 }
             }
         }
