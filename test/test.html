@@ -1,0 +1,35 @@
+<!DOCTYPE>
+<html>
+<head>
+	<script type="text/javascript" src="../bower_components/chai/chai.js"></script>
+	<script type="text/javascript" src="../bower_components/chai-as-promised/lib/chai-as-promised.js"></script>
+	<script type="text/javascript" src="../bower_components/mocha/mocha.js"></script>
+	<script type="text/javascript" src="../bower_components/should.js/should.js"></script>
+	<script type="text/javascript" src="../bower_components/native-promise-only/lib/npo.src.js"></script>
+	<link rel="stylesheet" href="../bower_components/mocha/mocha.css" />
+</head>
+</html>
+<body>
+	<p><a href="http://martinpaljak.net/sign/test/test.html">http</a> | <a href="https://pubkey.ee/sign/test/test.html">https</a></p>
+	<p><a href="backend.html">backend test</a> | <a href="test.html">generic tests</a></p>
+	<hr>
+	<div id="mocha"></div>
+	<!-- Include the actual tests. -->
+	<script>
+		mocha.ui('bdd');
+//		mocha.reporter('html');
+		expect = chai.expect;
+		should = chai.should();
+	</script>
+	<script src="../hwcrypto.js"></script>
+	<script src="hwcrypto.test.js"></script>
+
+	<script>
+		if (window.mochaPhantomJS) {
+			mochaPhantomJS.run();
+		} else {
+			mocha.run();
+		}
+	</script>
+</body>
+</html>
