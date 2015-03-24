@@ -2,6 +2,9 @@ build:
 	bower install
 
 publish:
+	# make sure versions are in sync
+	grunt sync
+	# only publish commited code
 	test -z "`git status -s`"
 	echo "var publishedGitVersion='`git describe --tags --always`';" > gitversion.js
 	# check out Github pages if not already
