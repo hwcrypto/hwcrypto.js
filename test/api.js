@@ -1,6 +1,8 @@
 describe('window.hwcrypto', function(){
-	var expect = chai.expect;
-	var should = chai.should();
+	mocha.ui('bdd');
+    var expect = chai.expect;
+    var should = chai.should();
+
 	it('should exist after script inclusion', function () {
 		expect(window.hwcrypto).to.be.a('object'); 
 	});
@@ -34,7 +36,11 @@ describe('window.hwcrypto', function(){
 	it('should have TECHNICAL_ERROR constant', function() {
 		expect(window.hwcrypto.TECHNICAL_ERROR).to.equal('technical_error');
 	});
-
+	it('should not have extra properties', function() {
+		var okprops = ["use", "debug", "getCertificate", "sign", "NO_IMPLEMENTATION", "USER_CANCEL", "NOT_ALLOWED", "NO_CERTIFICATES", "TECHNICAL_ERROR", "INVALID_ARGUMENT"].sort();
+		var props = Object.keys(window.hwcrypto).sort();
+		expect(props).to.have.members(okprops);
+	});
 	describe('backend selection', function() {
 		it('should have use() method', function() {
 			expect(window.hwcrypto).itself.to.respondTo('use');
