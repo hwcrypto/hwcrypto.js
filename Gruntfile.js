@@ -17,7 +17,6 @@ module.exports = function(grunt) {
                     compress: false
                 },
                 src: 'hwcrypto.js',
-                dest: 'blah.js'
             }
         },
         jshint: {
@@ -27,9 +26,9 @@ module.exports = function(grunt) {
         },
         mocha: {
              test: {
-                src: ['test/test.html'],
+                src: ['test/api.html'],
                 options: {
-                      run: true,
+                    run: true,
                 },
             },
         },
