@@ -26,22 +26,22 @@ describe('window.hwcrypto', function(){
 		it('should have debug() method', function() {
 			expect(window.hwcrypto).itself.to.respondTo('debug');
 		});
-		it('should always return a string', function() {
-			expect(window.hwcrypto.debug()).to.be.a('string');
+		it('should always succeed', function() {
+			return window.hwcrypto.debug().should.eventually.be.a('string');
 		});
-		it('should always contain "active backend"', function() {
-			expect(window.hwcrypto.debug()).to.contain('active backend');
+		it('should always contain "hwcrypto"', function() {
+			return window.hwcrypto.debug().should.eventually.contain('hwcrypto');
 		});
 	});
 
 	describe('.getCertificate()', function(){
 		it('should be rejected without backend', function(){
-			return window.hwcrypto.getCertificate().should.be.rejectedWith(Error, window.hwcrypto.INVALID_ARGUMENT);
+			return window.hwcrypto.getCertificate({}).should.be.rejectedWith(Error, window.hwcrypto.NO_IMPLEMENTATION);
 		});
 	});
 	describe('.sign()', function(){
 		it('should be rejected without backend', function(){
-			return window.hwcrypto.sign().should.be.rejectedWith(Error, window.hwcrypto.INVALID_ARGUMENT);
+			return window.hwcrypto.sign({}, {}, {}).should.be.rejectedWith(Error, window.hwcrypto.NO_IMPLEMENTATION);
 		});
 	});
 }); 
