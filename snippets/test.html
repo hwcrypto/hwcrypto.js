@@ -1,0 +1,33 @@
+<!DOCTYPE>
+<html>
+<head>
+	<!-- TODO: requires for promises via 'grunt mocha'. Remove when upgraded to phantomjs2 -->
+	<!-- See https://github.com/ariya/phantomjs/issues/10522#issuecomment-72705402 -->
+	<script type="text/javascript" src="js/index.js"></script>
+	<script type="text/javascript" src="js/lib/npo.src.js"></script>
+	<script type="text/javascript" src="js/chai.js"></script>
+	<script type="text/javascript" src="js/lib/chai-as-promised.js"></script>
+	<script type="text/javascript" src="js/mocha.js"></script>
+	<script type="text/javascript" src="js/should.js"></script>
+	<link rel="stylesheet" href="css/mocha.css" />
+</head>
+</html>
+<body>
+	<!-- @@include('toolbar.html') -->
+	<div id="mocha"></div>
+	<!-- Include the actual tests. -->
+	<script>
+		mocha.ui('bdd');
+	</script>
+	<script src="hwcrypto.js"></script>
+	<script src="<!-- @@testsuite -->"></script>
+
+	<script>
+		if (window.mochaPhantomJS) {
+			mochaPhantomJS.run();
+		} else {
+			mocha.run();
+		}
+	</script>
+</body>
+</html>

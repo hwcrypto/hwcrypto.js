@@ -1,14 +1,13 @@
 module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        bower: grunt.file.readJSON('bower.json'),
         uglify: {
             options: {
-                banner: '/*! This is hwcrypto.js <%= bower.version %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
+                banner: '/*! This is hwcrypto.js <%= pkg.version %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
             },
             build: {
                 src: 'hwcrypto.js',
-                dest: 'build/<%= pkg.name %>.min.js'
+                dest: 'dist/<%= pkg.name %>.min.js'
             },
             dist: {
                 options: {
@@ -17,22 +16,36 @@ module.exports = function(grunt) {
                     compress: false
                 },
                 src: 'hwcrypto.js',
+                dest: 'dist/hwcrypto.js'
             }
         },
         jshint: {
             app: {
-              src: ['hwcrypto.js', 'test/*.js'],
+                src: ['hwcrypto.js', 'test/*.js'],
             },
         },
+        includereplace: {
+            dist: {
+                options: {
+                    prefix: '<!-- @@',
+                    suffix: ' -->',
+                    includesDir: 'snippets/'
+                },
+                files: [
+                    {src: 'sign.html', dest: 'dist/', expand: true, cwd: 'demo'},
+                    {src: '*.html', dest: 'dist/', expand: true, cwd: 'test'},
+                    {src: '*.js', dest: 'dist/', expand: true, cwd: 'test'}
+                ]
+            }
+        },
         mocha: {
-             test: {
-                src: ['test/api.html'],
+            test: {
+                src: ['dist/api.html'],
                 options: {
                     run: true,
                 },
             },
         },
-
         connect: {
             server: {
                 options: {
@@ -41,9 +54,16 @@ module.exports = function(grunt) {
                     open: 'http://localhost:8888/test/okbrowser.html'
                 }
             }
-        }
+        },
+        bower: {
+            build: {
+                dest: 'dist',
+                js_dest: 'dist/js',
+                css_dest: 'dist/css'
+            }
+        },
+        clean: ['dist']
     });
-
     // Minification
     grunt.loadNpmTasks('grunt-contrib-uglify');
     // code check
@@ -54,7 +74,14 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-mocha');
     // version number syncing before releasing
     grunt.loadNpmTasks('grunt-sync-pkg');
+    // file templates
+    grunt.loadNpmTasks('grunt-include-replace');
+    // copy bower components
+    grunt.loadNpmTasks('grunt-bower');
+    // Clean up
+    grunt.loadNpmTasks('grunt-contrib-clean');
 
     // Default task(s).
-    grunt.registerTask('default', ['mocha']);
+    grunt.registerTask('build', ['clean', 'bower', 'includereplace', 'uglify']);
+    grunt.registerTask('default', ['build', 'mocha']);
 };

@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <title>hwcrypto.js</title>
-  <script src="bower_components/native-promise-only/lib/npo.src.js"></script>
-  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script type="text/javascript" src="js/lib/npo.src.js"></script>
+  <script type="text/javascript" src="js/dist/jquery.js"></script>
   <script src="gitversion.js"></script>
   <script src="hwcrypto.js"></script>
   <script src="hex2base.js"></script>
@@ -81,12 +81,8 @@
     });
   </script>
   <div id="scripton" style="display: none">
+   <!-- @@include('toolbar.html') -->
    <h1>sign()</h1>
-   <p>This is a
-   <b><script>document.write(window.location.protocol.substring(0, window.location.protocol.length-1).toUpperCase());</script></b> test page for <a href="hwcrypto.js">hwcrypto.js</a> (<a href="https://github.com/open-eid/js-token-signing/wiki">more information</a>)
-     implementing <a href="https://github.com/open-eid/js-token-signing/wiki/ModernAPI">API v0.1</a>
-   </p>
-
    <p>You can get old NPAPI plugins from: <a href="https://installer.id.ee">installer.id.ee</a></p>
    <p><a href="https://chrome.google.com/webstore/detail/ckjefchnfjhjfedoccjbhjpbncimppeg">Install extension from chrome web store</a></p>
 
