@@ -9,10 +9,8 @@ publish:
 	# make sure it is clean
 	(cd gh-pages && git reset --hard && git clean -dfx && git rm -rf *)
 	# copy files to be published
-	# FIXME: requires GNU coreutils because of --parents
-	cp --parents bower_components/jquery/dist/jquery.min.js gh-pages
-	cp --parents bower_components/jquery/dist/jquery.min.map gh-pages
-	cp --parents bower_components/native-promise-only/lib/npo.src.js gh-pages
+	cp -rv bower_components gh-pages
+	cp -rv test gh-pages
 	cp sign.html gh-pages
 	cp hwcrypto.js gh-pages
 	cp hex2base.js gh-pages
