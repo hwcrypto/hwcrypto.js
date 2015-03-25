@@ -285,7 +285,12 @@ var hwcrypto = (function hwcrypto() {
         if(location.protocol !== 'https:' && location.protocol !== 'file:') {
             return Promise.reject(new Error(NOT_ALLOWED));
         }
-        return _backend.getCertificate(options);
+        return _backend.getCertificate(options).then(function(certificate) {
+            // Add binary value as well
+            if (certificate.hex && !certificate.encoded)
+                certificate.encoded = _hex2array(certificate.hex);
+            return certificate;
+        });
     };
     // Sign a hash
     fields.sign = function(cert, hash, options) {
@@ -295,6 +300,19 @@ var hwcrypto = (function hwcrypto() {
         if(options && !options.lang) {
             options.lang = 'en';
         }
+        // Hash type and value must be present
+        if (!hash.type || (!hash.value && !hash.hex))
+            return Promise.reject(new Error(INVALID_ARGUMENT));
+
+        // Convert Hash to hex and vice versa.
+        // TODO: All backends currently expect the presence of Hex.
+        if (hash.hex && !hash.value) {
+            console.log("DEPRECATED: hash.hex as argument to sign() is deprecated, use hash.value instead");
+            hash.value = _hex2array(hash.hex);
+        }
+        if (hash.value && !hash.hex)
+            hash.hex = _array2hex(hash.value);
+
         if(!_backend) {
             _autodetect();
         }
@@ -302,7 +320,13 @@ var hwcrypto = (function hwcrypto() {
         if(location.protocol !== 'https:' && location.protocol !== 'file:') {
             return Promise.reject(new Error(NOT_ALLOWED));
         }
-        return _backend.sign(cert, hash, options);
+        return _backend.sign(cert, hash, options).then(function(signature) {
+            // Add binary value as well
+            // TODO: all backends return hex currently
+            if (signature.hex && !signature.value)
+                signature.value = _hex2array(signature.hex);
+            return signature;
+        });
     };
     // Constants for errors
     fields.NO_IMPLEMENTATION = NO_IMPLEMENTATION;
