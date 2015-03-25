@@ -1,7 +1,7 @@
 {
   "name": "hwcrypto",
   "main": "hwcrypto.js",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "repository": {
     "type": "git",
     "url": "http://github.com/open-eid/js-token-signing.git"
