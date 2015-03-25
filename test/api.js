@@ -76,7 +76,7 @@ describe('window.hwcrypto', function(){
 			return window.hwcrypto.sign().should.be.rejectedWith(Error, window.hwcrypto.INVALID_ARGUMENT);
 		});
 		it('should be rejected without backend', function(){
-			return window.hwcrypto.sign({}, {}, {}).should.be.rejectedWith(Error, window.hwcrypto.NO_IMPLEMENTATION);
+			return window.hwcrypto.sign({}, {type: "SHA-1", hex: "3132"}, {}).should.be.rejectedWith(Error, window.hwcrypto.NO_IMPLEMENTATION);
 		});
 	});
 }); 
