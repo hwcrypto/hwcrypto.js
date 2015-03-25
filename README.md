@@ -11,5 +11,18 @@ The easiest way for managing JavaScript-s on a website is with [Bower](http://bo
 
         $ bower install --save hwcrypto
 
+Alternatively you can download the files from [release area](https://github.com/open-eid/js-token-signing/releases).
 
-For further instructions please have a look at [API specification](https://github.com/open-eid/js-token-signing/wiki/ModernAPI)
+`hwcrypto.js` itself does not do much, it depends on trusted platform code (installed separately and often running outside of the browser) to do the heavy lifting. 
+
+Version 0.0.7 has built-in support for:
+- [NPAPI style synchronous plugins for Firefox, Safari and IE](https://github.com/open-eid/browser-token-signing)
+- [Chrome messaging extension](https://github.com/open-eid/chrome-token-signing)
+
+Distribution and installation of the necessary platform components is out of scope of this project.
+
+For further instructions on how to use the interface please have a look at [API specification](https://github.com/open-eid/js-token-signing/wiki/ModernAPI)
+
+## Support
+
+For any bugs in the JavaScript component, please open an issue on Github.
