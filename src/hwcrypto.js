@@ -79,8 +79,7 @@ var hwcrypto = (function hwcrypto() {
         probe();
     });
     // Backend for DigiDoc plugin
-    function digidoc_plugin() {
-            /* jshint validthis: true */
+    function DigiDocPlugin() {
             this._name = "NPAPI/BHO for application/x-digidoc";
             var p = loadPluginFor(digidoc_mime);
             // keeps track of detected certificates and their ID-s
@@ -167,8 +166,7 @@ var hwcrypto = (function hwcrypto() {
             };
         }
         // Backend for Digidoc Chrome Extension
-    function digidoc_ext() {
-        /* jshint validthis: true */
+    function DigiDocExtension() {
         this._name = "Chrome native messaging extension";
         var p = null;
         this.check = function() {
@@ -193,8 +191,7 @@ var hwcrypto = (function hwcrypto() {
     }
 
     // Dummy
-    function no_backend() {
-        /* jshint validthis: true */
+    function NoBackend() {
         this._name = "No implementation";
         this.check = function() {
             return true;
@@ -231,16 +228,16 @@ var hwcrypto = (function hwcrypto() {
         // MSIE
         if(navigator.userAgent.indexOf('MSIE') != -1 || navigator.userAgent.indexOf('Trident') != -1) {
             console.log("Assuming IE BHO, testing");
-            if (_testAndUse(digidoc_plugin)) return true;
+            if (_testAndUse(DigiDocPlugin)) return true;
         }
         // First try Chrome extensions
         if(navigator.userAgent.indexOf('Chrome') != -1 && hasExtensionFor(digidoc_chrome)) {
-            if(_testAndUse(digidoc_ext)) return true;
+            if(_testAndUse(DigiDocExtension)) return true;
         }
         if(hasPluginFor(digidoc_mime)) {
-            if(_testAndUse(digidoc_plugin)) return true;
+            if(_testAndUse(DigiDocPlugin)) return true;
         }
-        return _testAndUse(no_backend);
+        return _testAndUse(NoBackend);
     }
     // Use a specific backend or autodetect
     fields.use = function(backend) {
@@ -248,9 +245,9 @@ var hwcrypto = (function hwcrypto() {
             return _autodetect();
         } else {
             if(backend === "chrome") {
-                return _testAndUse(digidoc_ext);
+                return _testAndUse(DigiDocExtension);
             } else if(backend === "npapi") {
-                return _testAndUse(digidoc_plugin);
+                return _testAndUse(DigiDocPlugin);
             } else {
                 return false; // unknown backend
             }
@@ -259,7 +256,7 @@ var hwcrypto = (function hwcrypto() {
     // Give debugging information.
     fields.debug = function() {
         return new Promise(function(resolve, reject) {
-            var hwversion = "hwcrypto.js v0.1.0";
+            var hwversion = "hwcrypto.js @@hwcryptoversion";
             if(!_backend) _autodetect();
             _backend.getVersion().then(function(version) {
                 resolve(hwversion + " with " + _backend._name + " " + version);

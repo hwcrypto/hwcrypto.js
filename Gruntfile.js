@@ -5,26 +5,48 @@ module.exports = function(grunt) {
             options: {
                 banner: '/*! This is hwcrypto.js <%= pkg.version %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
             },
-            build: {
-                src: 'hwcrypto.js',
+            minify: {
+                src: 'build/hwcrypto.js',
                 dest: 'dist/<%= pkg.name %>.min.js'
             },
-            dist: {
+            beautify: {
                 options: {
                     beautify: true,
                     mangle: false,
                     compress: false
                 },
-                src: 'hwcrypto.js',
+                src: 'build/hwcrypto.js',
                 dest: 'dist/hwcrypto.js'
+            },
+            release: {
+                options: {
+                    beautify: true,
+                    mangle: false,
+                    compress: false
+                },
+                src: 'build/hwcrypto.js',
+                dest: 'hwcrypto.js'
             }
         },
         jshint: {
-            app: {
-                src: ['hwcrypto.js', 'test/*.js'],
+            src: {
+                src: ['src/hwcrypto.js', 'test/*.js'],
             },
+            release: {
+                src: ['hwcrypto.js']
+            }
         },
         includereplace: {
+            build: {
+                options: {
+                    globals: {
+                        hwcryptoversion: '<%= pkg.version %>'
+                    }
+                },
+                files: [
+                    {src: 'hwcrypto.js', dest: 'build/', expand: true, cwd: 'src'}
+                ]
+            },
             dist: {
                 options: {
                     prefix: '<!-- @@',
@@ -63,7 +85,7 @@ module.exports = function(grunt) {
                 css_dest: 'dist/css'
             }
         },
-        clean: ['dist']
+        clean: ['build', 'dist']
     });
     // Minification
     grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -83,6 +105,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
 
     // Default task(s).
-    grunt.registerTask('build', ['jshint', 'clean', 'bower', 'includereplace', 'uglify']);
-    grunt.registerTask('default', ['build', 'mocha']);
+    grunt.registerTask('build', ['clean', 'jshint:src', 'includereplace', 'uglify:minify', 'uglify:beautify']);
+    grunt.registerTask('dist', ['build', 'bower']);
+    grunt.registerTask('default', ['dist', 'mocha']);
+    grunt.registerTask('release', ['sync', 'build', 'includereplace:build', 'uglify:release', 'jshint:release'])
 };
