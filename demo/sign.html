@@ -27,7 +27,9 @@
       document.getElementById('log').appendChild(d);
     }
 
-
+    function debug() {
+    	window.hwcrypto.debug().then(function(response) {log_text("Debug: " + response);});
+    }
     function sign() {
     // Clear log
     document.getElementById('log').innerHTML = '';
@@ -113,6 +115,7 @@
    </li>
    </ul>
    <p><button id="click1" onclick='sign();'>Click here to invoke <b>sign()</b></button></p>
+   <p><button id="click2" onclick='debug();'>Brief debug()</button></p>
 
 
    <hr>
