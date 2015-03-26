@@ -21,7 +21,7 @@ Version 0.0.7 has built-in support for:
 
 Distribution and installation of the necessary platform components is out of scope of this project.
 
-For further instructions on how to use the interface please have a look at [API specification](https://github.com/open-eid/js-token-signing/wiki/ModernAPI)
+For further instructions on how to use the interface please have a look at **[API specification](https://github.com/open-eid/js-token-signing/wiki/ModernAPI)**
 
 ## Support
 
