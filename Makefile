@@ -1,5 +1,7 @@
-build:
+buildit:
+	npm install
 	bower install
+	grunt
 
 publish:
 	# make sure versions are in sync
