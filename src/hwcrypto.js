@@ -1,5 +1,5 @@
 // JavaScript library as described in
-// https://github.com/open-eid/js-token-signing
+// https://github.com/open-eid/hwcrypto.js
 var hwcrypto = (function hwcrypto() {
     'use strict';
     console.log("hwcrypto.js activated");

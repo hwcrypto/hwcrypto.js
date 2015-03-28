@@ -15,10 +15,10 @@
     "smartcard"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/open-eid/js-token-signing.git",
+  "homepage": "https://github.com/open-eid/hwcrypto.js.git",
   "repository": {
     "type": "git",
-    "url": "git://github.com/open-eid/js-token-signing.git"
+    "url": "git://github.com/open-eid/hwcrypto.js.git"
   },
   "ignore": [
     "**/.*",

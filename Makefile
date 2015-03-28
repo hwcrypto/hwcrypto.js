@@ -7,7 +7,7 @@ publish:
 	# only publish commited code
 	test -z "`git status -s`"
 	# check out Github pages if not already
-	test -d gh-pages || git clone git@github.com:open-eid/js-token-signing.git -b gh-pages gh-pages
+	test -d gh-pages || git clone git@github.com:open-eid/hwcrypto.js.git -b gh-pages gh-pages
 	# make sure it is clean
 	(cd gh-pages && git reset --hard && git clean -dfx && git rm -rf *)
 	# run Grunt (includes tests)

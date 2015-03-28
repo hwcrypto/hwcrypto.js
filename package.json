@@ -4,7 +4,7 @@
   "version": "0.0.7",
   "repository": {
     "type": "git",
-    "url": "http://github.com/open-eid/js-token-signing.git"
+    "url": "http://github.com/open-eid/hwcrypto.js.git"
   },
   "devDependencies": {
     "bower": "^1.3.12",
