@@ -23,6 +23,8 @@ Distribution and installation of the necessary platform components is out of sco
 
 For further instructions on how to use the interface please have a look at [API specification](https://github.com/open-eid/hwcrypto.js/wiki/ModernAPI)
 
+For background information about the project and the eID web task force, please head to the [wiki](https://github.com/open-eid/hwcrypto.js/wiki#eid-web-tf)
+
 ## Support
 
 For any bugs in the JavaScript component, please open an issue on Github.
