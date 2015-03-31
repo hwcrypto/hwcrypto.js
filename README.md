@@ -15,9 +15,17 @@ Alternatively you can download the files from [release area](https://github.com/
 
 `hwcrypto.js` itself does not do much, it depends on trusted platform code (installed separately and often running outside of the browser) to do the heavy lifting. 
 
+## Features
+
 Version 0.0.7 has built-in support for:
 - [NPAPI style synchronous plugins for Firefox, Safari and IE](https://github.com/open-eid/browser-token-signing)
 - [Chrome messaging extension](https://github.com/open-eid/chrome-token-signing)
+
+Supports all [latest browsers](http://browsehappy.com/):
+- Chrome 40+
+- Firefox
+- IE 11
+- Safari
 
 Distribution and installation of the necessary platform components is out of scope of this project.
 
