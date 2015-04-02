@@ -3,7 +3,7 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
         uglify: {
             options: {
-                banner: '/*! This is hwcrypto.js <%= pkg.version %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
+                banner: '/*! This is hwcrypto.js <%= pkg.version %> generated on <%= grunt.template.today("yyyy-mm-dd") %> */\n/* DO NOT EDIT (use src/hwcrypto.js) */\n',
             },
             minify: {
                 src: 'build/hwcrypto.js',
