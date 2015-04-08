@@ -3,7 +3,7 @@
   "main": [
     "hwcrypto.js"
   ],
-  "version": "0.0.7",
+  "version": "0.0.8",
   "authors": [
     "Martin Paljak <martin@martinpaljak.net>"
   ],
