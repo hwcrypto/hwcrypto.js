@@ -17,17 +17,19 @@ Alternatively you can download the files from [release area](https://github.com/
 
 ## Features
 
-Version 0.0.7 has built-in support for:
+Version 0.0.9 has built-in support for:
 - [NPAPI style synchronous plugins for Firefox, Safari and IE](https://github.com/open-eid/browser-token-signing)
 - [Chrome messaging extension](https://github.com/open-eid/chrome-token-signing)
 
 Supports all [latest browsers](http://browsehappy.com/):
 - Chrome 40+
 - Firefox
-- IE 11
+- IE 8+*
 - Safari
 
-Support for IE8+ is achieved by polyfilling Promises, EventListener and TypedArray.
+*Support for IE8-IE10 requires a Promises polyfill; IE8 and IE9 also require TypedArray polyfill. Complimentary code is bundled into `hwcrypto-legacy.js`:
+  - https://github.com/inexorabletash/polyfill (license: Public Domain / MIT)
+  - https://github.com/getify/native-promise-only/ (license: MIT)
 
 Distribution and installation of the necessary platform components is out of scope of this project.
 
@@ -40,6 +42,8 @@ For background information about the project and the eID web task force, please 
 For any bugs in the JavaScript component, please open an issue on Github.
 
 ## ChangeLog
+- 0.0.9
+  - Have only typed arrays and promises in the legacy helper
 - 0.0.8
   - Make internal API also asynchronous, to work with old IE-s
   - Have a convenience-bundle `hwcrypto-legacy.js`
