@@ -3,6 +3,8 @@
 var hwcrypto = (function hwcrypto() {
     'use strict';
     console.log("hwcrypto.js activated");
+    // Fix up IE8
+    window.addEventListener = window.addEventListener || window.attachEvent;
     // Returns "true" if a plugin is present for the MIME
     function hasPluginFor(mime) {
             if(navigator.mimeTypes && mime in navigator.mimeTypes) {
