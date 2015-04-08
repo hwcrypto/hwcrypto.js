@@ -47,7 +47,7 @@ describe('window.hwcrypto', function(){
 			expect(window.hwcrypto).itself.to.respondTo('use');
 		});
 		it('use() method should always return true with auto argument', function() {
-			expect(window.hwcrypto.use('auto')).to.be.true;
+			return window.hwcrypto.use('auto').should.eventually.be.true;
 		});
 	});
 

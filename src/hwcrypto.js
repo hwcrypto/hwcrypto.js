@@ -44,13 +44,14 @@ var hwcrypto = (function hwcrypto() {
                 return document.getElementById(element);
             }
             console.log('Loading plugin for ' + mime + ' into ' + element);
-            var d = document.createElement("object");
-            d.setAttribute("id", element);
-            d.setAttribute("type", mime);
-            d.setAttribute("width", "1");
-            d.setAttribute("height", "1");
-            document.body.appendChild(d);
-            return d;
+            // Must insert tag as string (not as an Element object) so that IE9 can access plugin methods
+            var objectTag = '<object id="' + element + '" type="' + mime + '" style="width: 1px; height: 1px; position: absolute; visibility: hidden;"></object>';
+            var div = document.createElement("div");
+            div.setAttribute("id", 'pluginLocation' + element);
+            document.body.appendChild(div);
+            // Must not manipulate body's innerHTML directly, otherwise previous Element references get lost
+            document.getElementById('pluginLocation' + element).innerHTML = objectTag;
+            return document.getElementById(element);
         }
         // Important constants
     var digidoc_mime = 'application/x-digidoc';
@@ -107,10 +108,12 @@ var hwcrypto = (function hwcrypto() {
                 return new Error(code2str(err));
             }
             this.check = function() {
-                if(typeof p.version !== 'undefined') {
-                    return true;
-                }
-                return false;
+                return new Promise(function(resolve, reject) {
+                    // IE8 cannot access the newly inserted plugin object before the end of call queue
+                    setTimeout(function() {
+                        resolve(typeof p.version !== "undefined");
+                    }, 0);
+                });
             };
             this.getVersion = function() {
                 return new Promise(function(resolve, reject) {
@@ -170,14 +173,18 @@ var hwcrypto = (function hwcrypto() {
         this._name = "Chrome native messaging extension";
         var p = null;
         this.check = function() {
-            if(!hasExtensionFor(digidoc_chrome)) return false;
-            // FIXME: remove this from content script!
-            p = new window[digidoc_chrome]();
-            if(p) {
-                return true;
-            } else {
-                return false;
-            }
+            return new Promise(function(resolve, reject) {
+                if (!hasExtensionFor(digidoc_chrome)) {
+                    return resolve(false);
+                }
+                // FIXME: remove this from content script!
+                p = new window[digidoc_chrome]();
+                if (p) {
+                    resolve(true);
+                } else {
+                    resolve(false);
+                }
+            });
         };
         this.getVersion = function() {
             return p.getVersion();
@@ -194,7 +201,9 @@ var hwcrypto = (function hwcrypto() {
     function NoBackend() {
         this._name = "No implementation";
         this.check = function() {
-            return true;
+            return new Promise(function(resolve, reject) {
+                resolve(true);
+            });
         };
         this.getVersion = function() {
             return Promise.reject(new Error(NO_IMPLEMENTATION));
@@ -212,56 +221,94 @@ var hwcrypto = (function hwcrypto() {
     var fields = {};
 
     function _testAndUse(Backend) {
-        var b = new Backend();
-        if(b.check()) {
-            console.log("Using backend: " + Backend.name);
-            _backend = b;
-            return true;
-        } else {
-            console.log(Backend.name + " check() failed");
-            return false;
-        }
+        return new Promise(function(resolve, reject) {
+            var b = new Backend();
+            b.check().then(function(isLoaded) {
+                if (isLoaded) {
+                    console.log("Using backend: " + b._name);
+                    _backend = b;
+                    resolve(true);
+                } else {
+                    console.log(b._name + " check() failed");
+                    resolve(false);
+                }
+            });
+        });
     }
 
-    function _autodetect() {
-        console.log("Autodetecting best backend");
-        // MSIE
-        if(navigator.userAgent.indexOf('MSIE') != -1 || navigator.userAgent.indexOf('Trident') != -1) {
-            console.log("Assuming IE BHO, testing");
-            if (_testAndUse(DigiDocPlugin)) return true;
-        }
-        // First try Chrome extensions
-        if(navigator.userAgent.indexOf('Chrome') != -1 && hasExtensionFor(digidoc_chrome)) {
-            if(_testAndUse(DigiDocExtension)) return true;
-        }
-        if(hasPluginFor(digidoc_mime)) {
-            if(_testAndUse(DigiDocPlugin)) return true;
-        }
-        return _testAndUse(NoBackend);
+    function _autodetect(force) {
+        return new Promise(function(resolve, reject) {
+            console.log("Autodetecting best backend");
+            if (typeof force === 'undefined') {
+                force = false;
+            }
+            if (_backend !== null && !force) {
+                return resolve(true);
+            }
+
+            function tryDigiDocPlugin() {
+                _testAndUse(DigiDocPlugin).then(function(result) {
+                    if (result) {
+                        resolve(true);
+                    } else {
+                        resolve(_testAndUse(NoBackend));
+                    }
+                });
+            }
+
+            // IE BHO
+            if (navigator.userAgent.indexOf("MSIE") != -1 || navigator.userAgent.indexOf("Trident") != -1) {
+                console.log("Assuming IE BHO, testing");
+                return tryDigiDocPlugin();
+            }
+
+            // Chrome extension or NPAPI
+            if (navigator.userAgent.indexOf("Chrome") != -1 && hasExtensionFor(digidoc_chrome)) {
+                _testAndUse(DigiDocExtension).then(function(result) {
+                    if (result) {
+                        resolve(true);
+                    } else {
+                        tryDigiDocPlugin();
+                    }
+                });
+                return;
+            }
+
+            // Other browsers with NPAPI support
+            if (hasPluginFor(digidoc_mime)) {
+                return tryDigiDocPlugin();
+            }
+
+            // No backend supported
+            resolve(_testAndUse(NoBackend));
+        });
     }
     // Use a specific backend or autodetect
     fields.use = function(backend) {
-        if(typeof backend === undefined || backend === 'auto') {
-            return _autodetect();
-        } else {
-            if(backend === "chrome") {
-                return _testAndUse(DigiDocExtension);
-            } else if(backend === "npapi") {
-                return _testAndUse(DigiDocPlugin);
+        return new Promise(function(resolve, reject) {
+            if (typeof backend === "undefined" || backend === 'auto') {
+                _autodetect().then(function(result) { resolve(result);});
             } else {
-                return false; // unknown backend
+                if (backend === "chrome") {
+                    resolve(_testAndUse(DigiDocExtension));
+                } else if (backend === "npapi") {
+                    resolve(_testAndUse(DigiDocPlugin));
+                } else {
+                    resolve(false); // unknown backend
+                }
             }
-        }
+        });
     };
     // Give debugging information.
     fields.debug = function() {
         return new Promise(function(resolve, reject) {
             var hwversion = "hwcrypto.js @@hwcryptoversion";
-            if(!_backend) _autodetect();
-            _backend.getVersion().then(function(version) {
-                resolve(hwversion + " with " + _backend._name + " " + version);
-            }, function(error) {
-                resolve(hwversion + " with failing backend " + _backend._name);
+            _autodetect().then(function(result) {
+                _backend.getVersion().then(function(version) {
+                    resolve(hwversion + " with " + _backend._name + " " + version);
+                }, function(error) {
+                    resolve(hwversion + " with failing backend " + _backend._name);
+                });
             });
         });
     };
@@ -275,18 +322,17 @@ var hwcrypto = (function hwcrypto() {
         if(options && !options.lang) {
             options.lang = 'en';
         }
-        if(!_backend) {
-            _autodetect();
-        }
-        // FIXME: dummy security check in website context
-        if(location.protocol !== 'https:' && location.protocol !== 'file:') {
-            return Promise.reject(new Error(NOT_ALLOWED));
-        }
-        return _backend.getCertificate(options).then(function(certificate) {
-            // Add binary value as well
-            if (certificate.hex && !certificate.encoded)
-                certificate.encoded = _hex2array(certificate.hex);
-            return certificate;
+        return _autodetect().then(function(result) {
+            // FIXME: dummy security check in website context
+            if (location.protocol !== 'https:' && location.protocol !== 'file:') {
+                return Promise.reject(new Error(NOT_ALLOWED));
+            }
+            return _backend.getCertificate(options).then(function(certificate) {
+                // Add binary value as well
+                if (certificate.hex && !certificate.encoded)
+                    certificate.encoded = _hex2array(certificate.hex);
+                return certificate;
+            });
         });
     };
     // Sign a hash
@@ -310,19 +356,18 @@ var hwcrypto = (function hwcrypto() {
         if (hash.value && !hash.hex)
             hash.hex = _array2hex(hash.value);
 
-        if(!_backend) {
-            _autodetect();
-        }
-        // FIXME: dummy security check in website context
-        if(location.protocol !== 'https:' && location.protocol !== 'file:') {
-            return Promise.reject(new Error(NOT_ALLOWED));
-        }
-        return _backend.sign(cert, hash, options).then(function(signature) {
-            // Add binary value as well
-            // TODO: all backends return hex currently
-            if (signature.hex && !signature.value)
-                signature.value = _hex2array(signature.hex);
-            return signature;
+        return _autodetect().then(function(result) {
+            // FIXME: dummy security check in website context
+            if(location.protocol !== 'https:' && location.protocol !== 'file:') {
+                return Promise.reject(new Error(NOT_ALLOWED));
+            }
+            return _backend.sign(cert, hash, options).then(function(signature) {
+                // Add binary value as well
+                // TODO: all backends return hex currently
+                if (signature.hex && !signature.value)
+                    signature.value = _hex2array(signature.hex);
+                return signature;
+            });
         });
     };
     // Constants for errors
