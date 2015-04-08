@@ -38,3 +38,8 @@ For background information about the project and the eID web task force, please 
 ## Support
 
 For any bugs in the JavaScript component, please open an issue on Github.
+
+## ChangeLog
+- 0.0.8
+  - Make internal API also asynchronous, to work with old IE-s
+  - Have a convenience-bundle `hwcrypto-legacy.js`
