@@ -34,6 +34,7 @@ module.exports = function(grunt) {
                 files: {
                     'dist/hwcrypto-legacy.js': ['bower_components/js-polyfills/typedarray.js',
                                                 'bower_components/native-promise-only/lib/npo.src.js',
+                                                'bower_components/js-polyfills/es5.js',
                                                 'bower_components/js-polyfills/web.js']
                 }
             }
