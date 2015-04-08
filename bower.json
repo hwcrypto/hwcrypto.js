@@ -36,6 +36,7 @@
     "bind-polyfill": "~1.0.0"
   },
   "dependencies": {
-    "native-promise-only": "~0.7.6-a"
+    "native-promise-only": "~0.7.6-a",
+    "js-polyfills": "~0.1.2"
   }
 }

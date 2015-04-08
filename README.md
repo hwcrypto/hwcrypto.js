@@ -27,6 +27,8 @@ Supports all [latest browsers](http://browsehappy.com/):
 - IE 11
 - Safari
 
+Support for IE8+ is achieved by polyfilling Promises, EventListener and TypedArray.
+
 Distribution and installation of the necessary platform components is out of scope of this project.
 
 For further instructions on how to use the interface please have a look at [API specification](https://github.com/open-eid/hwcrypto.js/wiki/ModernAPI)
