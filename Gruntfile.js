@@ -116,7 +116,7 @@ module.exports = function(grunt) {
 
     // Default task(s).
     grunt.registerTask('build', ['clean', 'jshint:src', 'includereplace', 'uglify:minify', 'uglify:beautify']);
-    grunt.registerTask('dist', ['build', 'bower', 'uglify:legacy']);
+    grunt.registerTask('dist', ['sync', 'build', 'bower', 'uglify:legacy']);
     grunt.registerTask('default', ['dist', 'mocha']);
     grunt.registerTask('release', ['sync', 'build', 'includereplace:build', 'uglify:release', 'jshint:release'])
 };
