@@ -20,11 +20,11 @@ var hwcrypto = (function hwcrypto() {
 
     function _hex2array(str) {
         if(typeof str == 'string') {
-            var ret = new Uint8Array(Math.floor(str.length / 2));
-            var i = 0;
-            str.replace(/(..)/g, function(str) {
-                ret[i++] = parseInt(str, 16);
-            });
+            var len = Math.floor(str.length / 2);
+            var ret = new Uint8Array(len);
+            for (var i = 0; i < len; i++) {
+                ret[i] = parseInt(str.substr(i * 2, 2), 16);
+            }
             return ret;
         }
     }
