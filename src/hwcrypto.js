@@ -3,8 +3,7 @@
 var hwcrypto = (function hwcrypto() {
     'use strict';
     console.log("hwcrypto.js activated");
-    // Fix up IE8
-    window.addEventListener = window.addEventListener || window.attachEvent;
+
     // Returns "true" if a plugin is present for the MIME
     function hasPluginFor(mime) {
             if(navigator.mimeTypes && mime in navigator.mimeTypes) {
@@ -14,8 +13,7 @@ var hwcrypto = (function hwcrypto() {
         }
         // Checks if a function is present (used for Chrome)
     function hasExtensionFor(cls) {
-        if(typeof window[cls] === 'function') return true;
-        return false;
+        return typeof window[cls] === 'function';
     }
 
     function _hex2array(str) {
@@ -52,7 +50,7 @@ var hwcrypto = (function hwcrypto() {
             div.setAttribute("id", 'pluginLocation' + element);
             document.body.appendChild(div);
             // Must not manipulate body's innerHTML directly, otherwise previous Element references get lost
-            document.getElementById('pluginLocation' + element).innerHTML = objectTag;
+            div.innerHTML = objectTag;
             return document.getElementById(element);
         }
         // Important constants
@@ -77,10 +75,9 @@ var hwcrypto = (function hwcrypto() {
             }
         }
         // TODO: remove
-    window.addEventListener('load', function(event) {
         // There's a timeout because chrome content script needs to be loaded
-        probe();
-    });
+    (window.addEventListener || window.attachEvent).call(window, 'load', probe, false);
+
     // Backend for DigiDoc plugin
     function DigiDocPlugin() {
             this._name = "NPAPI/BHO for application/x-digidoc";
