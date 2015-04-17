@@ -2,7 +2,10 @@
 // https://github.com/open-eid/hwcrypto.js
 var hwcrypto = (function hwcrypto() {
     'use strict';
-    console.log("hwcrypto.js activated");
+    var _debug = function(x) {
+        // console.log(x);
+    };
+    _debug("hwcrypto.js activated");
     // Fix up IE8
     window.addEventListener = window.addEventListener || window.attachEvent;
     // Returns "true" if a plugin is present for the MIME
@@ -42,10 +45,10 @@ var hwcrypto = (function hwcrypto() {
     function loadPluginFor(mime) {
             var element = _mimeid(mime);
             if(document.getElementById(element)) {
-                console.log("Plugin element already loaded");
+                _debug("Plugin element already loaded");
                 return document.getElementById(element);
             }
-            console.log('Loading plugin for ' + mime + ' into ' + element);
+            _debug('Loading plugin for ' + mime + ' into ' + element);
             // Must insert tag as string (not as an Element object) so that IE9 can access plugin methods
             var objectTag = '<object id="' + element + '" type="' + mime + '" style="width: 1px; height: 1px; position: absolute; visibility: hidden;"></object>';
             var div = document.createElement("div");
@@ -70,10 +73,10 @@ var hwcrypto = (function hwcrypto() {
             var msg = 'probe() detected ';
             // First try Chrome extensions
             if(hasExtensionFor(digidoc_chrome)) {
-                console.log(msg + digidoc_chrome);
+                _debug(msg + digidoc_chrome);
             }
             if(hasPluginFor(digidoc_mime)) {
-                console.log(msg + digidoc_mime);
+                _debug(msg + digidoc_mime);
             }
         }
         // TODO: remove
@@ -89,7 +92,7 @@ var hwcrypto = (function hwcrypto() {
             var certificate_ids = {};
 
             function code2str(err) {
-                console.log("Error: " + err + " with: " + p.errorMessage);
+                _debug("Error: " + err + " with: " + p.errorMessage);
                 switch(parseInt(err)) {
                     case 1:
                         return USER_CANCEL;
@@ -101,7 +104,7 @@ var hwcrypto = (function hwcrypto() {
                     case 19:
                         return NOT_ALLOWED;
                     default:
-                        console.log("Unknown error: " + err + " with: " + p.errorMessage);
+                        _debug("Unknown error: " + err + " with: " + p.errorMessage);
                         return TECHNICAL_ERROR;
                 }
             }
@@ -141,7 +144,7 @@ var hwcrypto = (function hwcrypto() {
                             });
                         }
                     } catch(ex) {
-                        console.log(ex);
+                        _debug(ex);
                         reject(code2err(p.errorCode));
                     }
                 });
@@ -160,11 +163,11 @@ var hwcrypto = (function hwcrypto() {
                                 hex: v
                             });
                         } catch(ex) {
-                            console.log(JSON.stringify(ex));
+                            _debug(JSON.stringify(ex));
                             reject(code2err(p.errorCode));
                         }
                     } else {
-                        console.log("invalid certificate: " + cert);
+                        _debug("invalid certificate: " + cert);
                         reject(new Error(INVALID_ARGUMENT));
                     }
                 });
@@ -227,11 +230,11 @@ var hwcrypto = (function hwcrypto() {
             var b = new Backend();
             b.check().then(function(isLoaded) {
                 if (isLoaded) {
-                    console.log("Using backend: " + b._name);
+                    _debug("Using backend: " + b._name);
                     _backend = b;
                     resolve(true);
                 } else {
-                    console.log(b._name + " check() failed");
+                    _debug(b._name + " check() failed");
                     resolve(false);
                 }
             });
@@ -240,7 +243,7 @@ var hwcrypto = (function hwcrypto() {
 
     function _autodetect(force) {
         return new Promise(function(resolve, reject) {
-            console.log("Autodetecting best backend");
+            _debug("Autodetecting best backend");
             if (typeof force === 'undefined') {
                 force = false;
             }
@@ -260,7 +263,7 @@ var hwcrypto = (function hwcrypto() {
 
             // IE BHO
             if (navigator.userAgent.indexOf("MSIE") != -1 || navigator.userAgent.indexOf("Trident") != -1) {
-                console.log("Assuming IE BHO, testing");
+                _debug("Assuming IE BHO, testing");
                 return tryDigiDocPlugin();
             }
 
@@ -317,7 +320,7 @@ var hwcrypto = (function hwcrypto() {
     // Get a certificate
     fields.getCertificate = function(options) {
         if(typeof options !== 'object') {
-            console.log("getCertificate options parameter must be an object");
+            _debug("getCertificate options parameter must be an object");
             return Promise.reject(new Error(INVALID_ARGUMENT));
         }
         // If options does not specify a language, set to 'en'
@@ -352,7 +355,7 @@ var hwcrypto = (function hwcrypto() {
         // Convert Hash to hex and vice versa.
         // TODO: All backends currently expect the presence of Hex.
         if (hash.hex && !hash.value) {
-            console.log("DEPRECATED: hash.hex as argument to sign() is deprecated, use hash.value instead");
+            _debug("DEPRECATED: hash.hex as argument to sign() is deprecated, use hash.value instead");
             hash.value = _hex2array(hash.hex);
         }
         if (hash.value && !hash.hex)
