@@ -10,15 +10,11 @@ var hwcrypto = (function hwcrypto() {
     window.addEventListener = window.addEventListener || window.attachEvent;
     // Returns "true" if a plugin is present for the MIME
     function hasPluginFor(mime) {
-            if(navigator.mimeTypes && mime in navigator.mimeTypes) {
-                return true;
-            }
-            return false;
-        }
-        // Checks if a function is present (used for Chrome)
+        return navigator.mimeTypes && mime in navigator.mimeTypes;
+    }
+    // Checks if a function is present (used for Chrome)
     function hasExtensionFor(cls) {
-        if(typeof window[cls] === 'function') return true;
-        return false;
+        return typeof window[cls] === 'function';
     }
 
     function _hex2array(str) {
