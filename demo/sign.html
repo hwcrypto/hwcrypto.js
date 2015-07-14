@@ -1,18 +1,51 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <title>hwcrypto.js</title>
-  <script src="gitversion.js"></script>
-  <script src="hwcrypto-legacy.js"></script>
-  <script src="hwcrypto.js"></script>
-  <script src="js/dist/jquery.js"></script>
-  <script src="hex2base.js"></script>
+  <script src="../src/hwcrypto.js"></script>
+  <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
   <style type="text/css">
     body {font-family: Georgia, serif;}
   </style>
-  
-  <script>
+
+  <script type="text/javascript">
+    function hexToPem(input) {
+      /* Conversion function retrieved from http://id.anttix.org/leak/leak.js */
+      var _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+      var output = "-----BEGIN CERTIFICATE-----\n";
+      var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+      var i = 0, j = 0;
+
+      // Base64 encoder
+      while (i < input.length) {
+          chr1 = '0x' + input.charAt(i++) + input.charAt(i++);
+          chr2 = '0x' + input.charAt(i++) + input.charAt(i++);
+          chr3 = '0x' + input.charAt(i++) + input.charAt(i++);
+
+          enc1 = chr1 >> 2;
+          enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+          enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+          enc4 = chr3 & 63;
+
+          if (isNaN(chr2)) {
+              enc3 = enc4 = 64;
+          } else if (isNaN(chr3)) {
+              enc4 = 64;
+          }
+
+          output += _keyStr.charAt(enc1) + _keyStr.charAt(enc2) +
+              _keyStr.charAt(enc3) + _keyStr.charAt(enc4);
+          j += 4;
+          if(j % 64 == 0) output += "\n";
+
+      }
+
+      output += "\n-----END CERTIFICATE-----\n";
+
+      return output;
+    }
+
     var hashes = {};
     hashes['SHA-1'] = 'c33df55b8aee82b5018130f61a9199f6a9d5d385';
     hashes['SHA-224'] = '614eadb55ecd6c4938fe23a450edd51292519f7ffb51e91dc8aa5fbe';
@@ -96,8 +129,8 @@
      <input type="radio" name="hash" value="SHA-224">SHA-224
      <input type="radio" name="hash" value="SHA-256" checked>SHA-256
      <input type="radio" name="hash" value="SHA-384">SHA-384
-     <input type="radio" name="hash" value="SHA-512">SHA-512 
-     <input type="radio" name="hash" value="SHA-192">"SHA-192" (erronoeus) 
+     <input type="radio" name="hash" value="SHA-512">SHA-512
+     <input type="radio" name="hash" value="SHA-192">"SHA-192" (erronoeus)
      <br/>
      <input id="hashvalue" type="text" size="200">
    </li>
@@ -119,7 +152,7 @@
 
 
    <hr>
-   <script>document.write("<pre>This is sign.html " + publishedGitVersion + " running on\n" + navigator.userAgent + "</pre>");</script>
+   <script>document.write("<pre>This is sign.html running on\n" + navigator.userAgent + "</pre>");</script>
    <div id="log" style="white-space: pre; font-family: monospace;"></div>
  </div>
 </body>
