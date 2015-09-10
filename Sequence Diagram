@@ -42,7 +42,7 @@ end note
 note left of WebApp:
   Compose and display web page
   with browser signing module and
-  has toi be signed
+  hash to be signed
 end note
 
 WebApp->hwcrypto.js: call sign()
