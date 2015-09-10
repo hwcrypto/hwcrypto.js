@@ -37,8 +37,6 @@ note left of WebApp:
   Create BDOC container, prepare
   signature XML structure and 
   calculate the hash that is signed
-  (e.g. use DigidocService web service
-  or DigiDoc libraries)
 end note
 
 note left of WebApp:
@@ -68,6 +66,5 @@ note left of WebApp:
   Compose the final BDOC
   document by adding the RSA
   signature value to the signature
-  XML structure (e.g. use DigidocService
-  web service or DigiDoc libraries)
+  XML structure
 end note
