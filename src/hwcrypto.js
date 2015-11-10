@@ -14,30 +14,24 @@ var hwcrypto = (function hwcrypto() {
     }
     // Checks if a function is present (used for Chrome)
     function hasExtensionFor(cls) {
-        if (typeof window[cls] === "function") 
-        {
+        if (typeof window[cls] === 'function') {
             return true;
         }
-        else if (typeof window.top[cls] === "function")
-        {
+        else if (typeof window.top[cls] === 'function') {
             return true;
         }
-        else
-        {
+        else {
             return false;
         }
     }
     function getExtensionFor(cls) 
     {
-        if (typeof window[cls] === "function") 
-        {
+        if (typeof window[cls] === 'function') {
             return new window[cls]();
         }
-        else if (typeof window.top[cls] === "function")
-        {
+        else if (typeof window.top[cls] === 'function') {
             return new window.top[cls]();
         }
-        return null;
     }
 
     function _hex2array(str) {
