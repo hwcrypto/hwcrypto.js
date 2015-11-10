@@ -14,7 +14,30 @@ var hwcrypto = (function hwcrypto() {
     }
     // Checks if a function is present (used for Chrome)
     function hasExtensionFor(cls) {
-        return typeof window[cls] === 'function';
+        if (typeof window[cls] === "function") 
+        {
+            return true;
+        }
+        else if (typeof window.top[cls] === "function")
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    function getExtensionFor(cls) 
+    {
+        if (typeof window[cls] === "function") 
+        {
+            return new window[cls]();
+        }
+        else if (typeof window.top[cls] === "function")
+        {
+            return new window.top[cls]();
+        }
+        return null;
     }
 
     function _hex2array(str) {
@@ -178,8 +201,7 @@ var hwcrypto = (function hwcrypto() {
                 if (!hasExtensionFor(digidoc_chrome)) {
                     return resolve(false);
                 }
-                // FIXME: remove this from content script!
-                p = new window[digidoc_chrome]();
+                p = getExtensionFor(digidoc_chrome);
                 if (p) {
                     resolve(true);
                 } else {
