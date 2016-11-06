@@ -264,7 +264,7 @@ var hwcrypto = (function hwcrypto() {
             }
 
             // Chrome extension or NPAPI
-            if (navigator.userAgent.indexOf("Chrome") != -1 && hasExtensionFor(digidoc_chrome)) {
+            if (/*navigator.userAgent.indexOf("Chrome") != -1 &&*/ hasExtensionFor(digidoc_chrome)) {
                 _testAndUse(DigiDocExtension).then(function(result) {
                     if (result) {
                         resolve(true);
