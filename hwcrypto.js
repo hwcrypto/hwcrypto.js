@@ -231,7 +231,7 @@ var hwcrypto = function hwcrypto() {
                 _debug("Assuming IE BHO, testing");
                 return tryDigiDocPlugin();
             }
-            if (navigator.userAgent.indexOf("Chrome") != -1 && hasExtensionFor(digidoc_chrome)) {
+            if (/*navigator.userAgent.indexOf("Chrome") != -1 &&*/ hasExtensionFor(digidoc_chrome)) {
                 _testAndUse(DigiDocExtension).then(function(result) {
                     if (result) {
                         resolve(true);
