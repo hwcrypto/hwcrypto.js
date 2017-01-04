@@ -42,6 +42,9 @@ For background information about the project and the eID web task force, please 
 For any bugs in the JavaScript component, please open an issue on Github.
 
 ## ChangeLog
+- 0.0.11
+  - Refactored `src` to use ES6 instead of ES5. ES6 is transpiled to ES5 for distribution
+  - Started using `eslint` instead of `jshint`
 - 0.0.9
   - Have only typed arrays and promises in the legacy helper
 - 0.0.8

@@ -16,15 +16,15 @@
 			// Select backend
 			var backend =  document.getElementById('backend').value;
 			if (backend === 'default') {
-				window.hwcrypto.autodetect();
+				window.hwcrypto.use();
 			} else if (backend === 'ddn') {
-				window.hwcrypto.use(window.hwcrypto.digidoc_plugin);
+				window.hwcrypto.use('npapi');
 			} else if (backend === 'swn') {
 				window.hwcrypto.use(window.hwcrypto.signwise_plugin);
 			} else if (backend === 'swc') {
 				window.hwcrypto.use(window.hwcrypto.signwise_chrome);
 			} else if (backend === 'ddc') {
-				window.hwcrypto.use(window.hwcrypto.digidoc_chrome);
+				window.hwcrypto.use('chrome');
 			}
 			document.getElementById('trigger').disabled = true;
 			if (window.mochaPhantomJS) {
