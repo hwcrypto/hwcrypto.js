@@ -60,7 +60,8 @@ module.exports = function(grunt) {
                     }
                 },
                 files: [
-                    {src: 'hwcrypto.js', dest: 'build/', expand: true}
+                    {src: 'hwcrypto.js', dest: './', expand: true, _comment: 'Perform replace in place'},
+                    {src: 'hwcrypto.js', dest: 'build/', expand: true, _comment: 'Use the same module lazy way for copying'}
                 ]
             },
             dist: {
