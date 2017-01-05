@@ -184,5 +184,6 @@ function probe() {
 // There's a timeout because chrome content script needs to be loaded
 window.addEventListener('load', () => probe())
 
-// `export default hwcrypto` cannot be used here
+// `export default hwcrypto` cannot be used here as ES6 `export default`
+// is equivalent to `module.exports.default`
 module.exports = hwcrypto

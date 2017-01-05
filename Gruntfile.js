@@ -40,21 +40,31 @@ module.exports = function(grunt) {
         eslint: {
             src: ['src/**/*.js']
         },
-        browserify: {
-            dist: {
-                options: {
-                    browserifyOptions: {
-                        standalone: 'hwcrypto'
-                    },
-                    transform: [['babelify', {presets: ['es2015']}]]
-                },        
-                src: ['src/hwcrypto.js'],
-                dest: 'hwcrypto.js',
+        webpack: {
+            build: {
+                entry: './src/hwcrypto.js',
+                output: {
+                    path: './',
+                    filename: 'hwcrypto.js',
+                    library: 'hwcrypto'
+                },
+                module: {
+                    loaders: [
+                      {
+                        test: /.js$/,
+                        loader: 'babel-loader',
+                        query: {
+                          presets: ['es2015']
+                        }
+                      }
+                    ]
+                }
             }
         },
         includereplace: {
             build: {
                 options: {
+                    processIncludeContents: false,
                     globals: {
                         hwcryptoversion: '<%= pkg.version %>'
                     }
@@ -113,7 +123,7 @@ module.exports = function(grunt) {
     // eslint
     grunt.loadNpmTasks("gruntify-eslint");
     // ES6 => browser compaitble ES5
-    grunt.loadNpmTasks('grunt-browserify');
+    grunt.loadNpmTasks('grunt-webpack');
     // development server
     grunt.loadNpmTasks('grunt-contrib-connect');
     // testing
@@ -130,7 +140,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
 
     // Default task(s).
-    grunt.registerTask('build', ['clean', 'browserify', 'includereplace', 'uglify:minify', 'uglify:beautify']);
+    grunt.registerTask('build', ['clean', 'webpack', 'includereplace', 'uglify:minify', 'uglify:beautify']);
     grunt.registerTask('dist', ['eslint', 'sync', 'build', 'bower-install-simple', 'bower', 'uglify:legacy']);
     grunt.registerTask('default', ['dist', 'mocha']);
     grunt.registerTask('release', ['sync', 'build', 'includereplace:build', 'uglify:release', 'jshint:release'])
