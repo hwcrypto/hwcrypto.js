@@ -1,4 +1,4 @@
-export const VERSION = '0.0.10'
+export const VERSION = '@@hwcryptoversion'
 
 export const digidoc_mime = 'application/x-digidoc'
 export const digidoc_chrome = 'TokenSigning'
