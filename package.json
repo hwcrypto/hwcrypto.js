@@ -14,6 +14,8 @@
     "url": "http://github.com/open-eid/hwcrypto.js.git"
   },
   "devDependencies": {
+    "babel-core": "^6.21.0",
+    "babel-eslint": "^7.1.1",
     "babel-loader": "^6.2.10",
     "babel-preset-es2015": "^6.18.0",
     "babel-runtime": "^6.20.0",
