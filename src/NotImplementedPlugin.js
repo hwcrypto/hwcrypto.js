@@ -3,13 +3,13 @@ import * as CONSTANTS from './constants'
 class NotImplementedPlugin {
     static get _id() { throw new Error(CONSTANTS.NO_IMPLEMENTATION) }
 
-	static isApplicable() {
-		return Promise.resolve(true)
-	}
+    static isApplicable() {
+        return Promise.resolve(true)
+    }
 
-	get _name() {
-		return 'No implementation'
-	}
+    get _name() {
+        return 'No implementation'
+    }
 
     check() { return Promise.resolve(true) }
     getVersion() { return Promise.reject(new Error(CONSTANTS.NO_IMPLEMENTATION)) }

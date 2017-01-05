@@ -3,9 +3,9 @@ import DigiDocExtension from './DigiDocExtension'
 import DigiDocServlet from './DigiDocServlet'
 
 const enabledPlugins = [
-	DigiDocServlet,
-	DigiDocPlugin,
-	DigiDocExtension
+    DigiDocServlet,
+    DigiDocPlugin,
+    DigiDocExtension
 ]
 
 export { DigiDocPlugin, DigiDocExtension, DigiDocServlet, enabledPlugins }

@@ -10,8 +10,10 @@
     "modules": true
   },
   "rules": {
+    "indent": [2, 4, {"SwitchCase": 1}],
     "no-console": 1,
     "no-const-assign": 2,
+    "no-tabs": 1,
     "no-unused-vars": [1, {"vars": "all", "args": "none"}],
     "no-var": 1,
     "prefer-const": 1,

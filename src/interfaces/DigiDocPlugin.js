@@ -6,21 +6,13 @@ import NotImplementedPlugin from '../NotImplementedPlugin'
 function code2str(err) {
     _debug("Error: " + err + " with: " + this.interface.errorMessage)
     switch (parseInt(err)) {
-      case 1:
-        return CONSTANTS.USER_CANCEL
-
-      case 2:
-        return CONSTANTS.INVALID_ARGUMENT
-
-      case 17:
-        return CONSTANTS.INVALID_ARGUMENT
-
-      case 19:
-        return CONSTANTS.NOT_ALLOWED
-
-      default:
-        _debug("Unknown error: " + err + " with: " + this.interface.errorMessage)
-        return CONSTANTS.TECHNICAL_ERROR
+        case 1:  return CONSTANTS.USER_CANCEL
+        case 2:  return CONSTANTS.INVALID_ARGUMENT
+        case 17: return CONSTANTS.INVALID_ARGUMENT
+        case 19: return CONSTANTS.NOT_ALLOWED
+        default:
+            _debug("Unknown error: " + err + " with: " + this.interface.errorMessage)
+            return CONSTANTS.TECHNICAL_ERROR
     }
 }
 
