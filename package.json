@@ -2,6 +2,11 @@
   "name": "hwcrypto",
   "main": "hwcrypto.js",
   "version": "0.0.11",
+  "author": "Martin Paljak <martin@martinpaljak.net>",
+  "contributors": [{
+    "name": "Kaarel Raspel",
+    "email": "kaarel.raspel@gmail.com"
+  }],
   "repository": {
     "type": "git",
     "url": "http://github.com/open-eid/hwcrypto.js.git"

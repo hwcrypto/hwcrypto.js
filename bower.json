@@ -5,7 +5,8 @@
   ],
   "version": "0.0.11",
   "authors": [
-    "Martin Paljak <martin@martinpaljak.net>"
+    "Martin Paljak <martin@martinpaljak.net>",
+    "Kaarel Raspel <kaarel.raspel@gmail.com>"
   ],
   "description": "Polyfill for window.hwcrypto for signing with smart card extensions",
   "moduleType": [
