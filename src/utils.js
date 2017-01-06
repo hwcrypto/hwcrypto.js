@@ -1,5 +1,3 @@
-/*global navigator window document XMLHttpRequest*/
-
 import * as CONSTANTS from './constants'
 
 // Returns "true" if a plugin is present for the MIME

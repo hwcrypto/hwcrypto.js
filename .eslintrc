@@ -2,6 +2,7 @@
   "parser": "babel-eslint",
   "extends": "eslint:recommended",
   "env": {
+    "browser": true,
     "es6": true,
     "node": true
   },
@@ -10,13 +11,16 @@
     "modules": true
   },
   "rules": {
-    "indent": [2, 4, {"SwitchCase": 1}],
-    "no-console": 1,
-    "no-const-assign": 2,
-    "no-tabs": 1,
-    "no-unused-vars": [1, {"vars": "all", "args": "none"}],
-    "no-var": 1,
-    "prefer-const": 1,
-    "no-trailing-spaces": 1
+    "eol-last": ["error", "always"],
+    "indent": ["error", 4, {"SwitchCase": 1}],
+    "no-console": ["error"],
+    "no-const-assign": ["error"],
+    "no-tabs": ["error"],
+    "no-trailing-spaces": ["error"],
+    "no-unused-vars": ["error", {"vars": "all", "args": "none"}],
+    "no-var": ["error"],
+    "prefer-const": ["error"],
+    "semi": ["error", "never"],
+    "template-curly-spacing": ["error", "always"]
   }
 }

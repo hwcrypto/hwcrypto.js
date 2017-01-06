@@ -1,4 +1,3 @@
-/*global window location*/
 'use strict'
 
 // JavaScript library as described in
@@ -52,7 +51,7 @@ function _autodetect(force) {
 
 function _performCrypto(method, cert, hash, options = {}) {
     if (arguments.length < 3) {
-        return Promise.reject(new Error(CONSTANTS.INVALID_ARGUMENT));
+        return Promise.reject(new Error(CONSTANTS.INVALID_ARGUMENT))
     }
     options.lang = (options && options.lang) || 'en'
 

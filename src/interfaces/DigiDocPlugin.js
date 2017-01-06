@@ -1,9 +1,7 @@
-/*global navigator*/
 import { hasPluginFor, loadPluginFor, _debug } from '../utils'
 import * as CONSTANTS from '../constants'
 import NotImplementedPlugin from '../NotImplementedPlugin'
 
-// 
 const digidoc_mime = 'application/x-digidoc'
 
 function code2str(err) {
@@ -92,7 +90,7 @@ class DigiDocPlugin extends NotImplementedPlugin {
                         _debug(JSON.stringify(ex))
                         reject(code2err.call(this, this.interface.errorCode))
                     }
-                }, 0);
+                }, 0)
             } else {
                 _debug('invalid certificate: ' + JSON.stringify(cert))
                 reject(new Error(CONSTANTS.INVALID_ARGUMENT))

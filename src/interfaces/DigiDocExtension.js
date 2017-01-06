@@ -1,6 +1,5 @@
 /*global window navigator*/
 import NotImplementedPlugin from '../NotImplementedPlugin'
-import * as CONSTANTS from '../constants'
 import { hasExtensionFor } from '../utils'
 
 const digidoc_chrome = 'TokenSigning'
