@@ -3,6 +3,9 @@ import { hasPluginFor, loadPluginFor, _debug } from '../utils'
 import * as CONSTANTS from '../constants'
 import NotImplementedPlugin from '../NotImplementedPlugin'
 
+// 
+const digidoc_mime = 'application/x-digidoc'
+
 function code2str(err) {
     _debug("Error: " + err + " with: " + this.interface.errorMessage)
     switch (parseInt(err)) {
@@ -29,12 +32,12 @@ class DigiDocPlugin extends NotImplementedPlugin {
         _debug("Assuming IE BHO, testing")
         const isMSIE = navigator.userAgent.indexOf("MSIE") !== -1
         const isTrident = navigator.userAgent.indexOf("Trident") !== -1
-        return Promise.resolve(isMSIE || isTrident || hasPluginFor(CONSTANTS.digidoc_mime))
+        return Promise.resolve(isMSIE || isTrident || hasPluginFor(digidoc_mime))
     }
 
     constructor() {
         super()
-        this.interface = loadPluginFor(CONSTANTS.digidoc_mime) || {}
+        this.interface = loadPluginFor(digidoc_mime) || {}
     }
 
     get _name() {

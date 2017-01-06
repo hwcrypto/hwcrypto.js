@@ -1,11 +1,9 @@
 import DigiDocPlugin from './DigiDocPlugin'
 import DigiDocExtension from './DigiDocExtension'
-import DigiDocServlet from './DigiDocServlet'
 
-const enabledPlugins = [
-    DigiDocServlet,
+const enabledBackends = [
     DigiDocPlugin,
     DigiDocExtension
 ]
 
-export { DigiDocPlugin, DigiDocExtension, DigiDocServlet, enabledPlugins }
+export { enabledBackends }

@@ -5,7 +5,7 @@
 // https://github.com/open-eid/hwcrypto.js
 import { _debug, _array2hex, _hex2array, hasExtensionFor, hasPluginFor } from './utils'
 import * as CONSTANTS from './constants'
-import { enabledPlugins } from './interfaces'
+import { enabledBackends } from './interfaces'
 import NoBackend from './NotImplementedPlugin'
 
 let _backend = null
@@ -31,7 +31,7 @@ function _autodetect(force) {
     }
 
     function tryToApplyPlugin() {
-        return enabledPlugins.reduce(function(promise, Plugin) {
+        return enabledBackends.reduce(function(promise, Plugin) {
             return promise.then(function(result) {
                 if (result) {
                     return result
@@ -84,7 +84,7 @@ function _performCrypto(method, cert, hash, options = {}) {
 class hwcrypto {
     static use(backend) {
         function tryToFindAndUsePlugin() {
-            return enabledPlugins.reduce(function(promise, Plugin) {
+            return enabledBackends.reduce(function(promise, Plugin) {
                 return promise.then(function(result) {
                     if (!result && Plugin._id === backend) {
                         return _testAndUse(Plugin)

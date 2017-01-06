@@ -3,12 +3,14 @@ import NotImplementedPlugin from '../NotImplementedPlugin'
 import * as CONSTANTS from '../constants'
 import { hasExtensionFor } from '../utils'
 
+const digidoc_chrome = 'TokenSigning'
+
 class DigiDocExtension extends NotImplementedPlugin {
     static get _id() { return 'chrome' }
 
     static isApplicable() {
         const isChrome = navigator.userAgent.indexOf("Chrome") != -1
-        return Promise.resolve(isChrome && hasExtensionFor(CONSTANTS.digidoc_chrome))
+        return Promise.resolve(isChrome && hasExtensionFor(digidoc_chrome))
     }
 
     constructor() {
@@ -22,8 +24,8 @@ class DigiDocExtension extends NotImplementedPlugin {
 
     check() {
         const extensionFound =
-            hasExtensionFor(CONSTANTS.digidoc_chrome)
-            && !!(this.interface = new window[CONSTANTS.digidoc_chrome]())
+            hasExtensionFor(digidoc_chrome)
+            && !!(this.interface = new window[digidoc_chrome]())
         return Promise.resolve(extensionFound)
     }
 
