@@ -47,7 +47,7 @@ describe('window.hwcrypto', function(){
     it('should not have extra properties', function() {
         var okprops = [
             // Node.js default properties
-            "length", "name", "prototype", "arguments", "callee", "caller",
+            "length", "name", "prototype", "arguments", "caller",
             // Proprietary properties
             "use", "debug", "getCertificate", "sign", "auth", "NO_IMPLEMENTATION", "USER_CANCEL", "NOT_ALLOWED", "NO_CERTIFICATES", "TECHNICAL_ERROR", "INVALID_ARGUMENT"
         ].sort();
