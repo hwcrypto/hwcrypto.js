@@ -1,7 +1,8 @@
 {
   "name": "hwcrypto",
   "main": [
-    "hwcrypto.js"
+    "hwcrypto.js",
+    "hwcrypto-legacy.js"
   ],
   "version": "0.0.10",
   "authors": [
