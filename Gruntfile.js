@@ -37,30 +37,51 @@ module.exports = function(grunt) {
                 }
             }
         },
-        jshint: {
-            src: {
-                src: ['src/hwcrypto.js', 'test/*.js'],
-            },
-            release: {
-                src: ['hwcrypto.js']
+        eslint: {
+            src: ['src/**/*.js']
+        },
+        webpack: {
+            build: {
+                entry: './src/hwcrypto.js',
+                output: {
+                    path: './',
+                    filename: 'hwcrypto.js',
+                    library: 'hwcrypto'
+                },
+                module: {
+                    loaders: [
+                      {
+                        test: /.js$/,
+                        loader: 'babel-loader',
+                        query: {
+                          presets: ['es2015']
+                        }
+                      }
+                    ]
+                }
             }
         },
         includereplace: {
             build: {
                 options: {
+                    processIncludeContents: false,
                     globals: {
                         hwcryptoversion: '<%= pkg.version %>'
                     }
                 },
                 files: [
-                    {src: 'hwcrypto.js', dest: 'build/', expand: true, cwd: 'src'}
+                    {src: 'hwcrypto.js', dest: './', expand: true, _comment: 'Perform replace in place'},
+                    {src: 'hwcrypto.js', dest: 'build/', expand: true, _comment: 'Use the same module lazy way for copying'}
                 ]
             },
             dist: {
                 options: {
                     prefix: '<!-- @@',
                     suffix: ' -->',
-                    includesDir: 'snippets/'
+                    includesDir: 'snippets/',
+                    globals: {
+                        hwcryptoversion: '<%= pkg.version %>'
+                    }
                 },
                 files: [
                     {src: 'sign.html', dest: 'dist/', expand: true, cwd: 'demo'},
@@ -74,6 +95,8 @@ module.exports = function(grunt) {
             test: {
                 src: ['dist/api.html'],
                 options: {
+                    ui: 'bdd',
+                    log: true,
                     run: true,
                 },
             },
@@ -94,12 +117,17 @@ module.exports = function(grunt) {
                 css_dest: 'dist/css'
             }
         },
+        "bower-install-simple": {
+            dist: {}
+        },
         clean: ['build', 'dist']
     });
     // Minification
     grunt.loadNpmTasks('grunt-contrib-uglify');
-    // code check
-    grunt.loadNpmTasks('grunt-contrib-jshint');
+    // eslint
+    grunt.loadNpmTasks("gruntify-eslint");
+    // ES6 => browser compaitble ES5
+    grunt.loadNpmTasks('grunt-webpack');
     // development server
     grunt.loadNpmTasks('grunt-contrib-connect');
     // testing
@@ -108,14 +136,16 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-sync-pkg');
     // file templates
     grunt.loadNpmTasks('grunt-include-replace');
+    // perform bower install
+    grunt.loadNpmTasks('grunt-bower-install-simple');
     // copy bower components
     grunt.loadNpmTasks('grunt-bower');
     // Clean up
     grunt.loadNpmTasks('grunt-contrib-clean');
 
     // Default task(s).
-    grunt.registerTask('build', ['clean', 'jshint:src', 'includereplace', 'uglify:minify', 'uglify:beautify']);
-    grunt.registerTask('dist', ['sync', 'build', 'bower', 'uglify:legacy']);
+    grunt.registerTask('build', ['clean', 'webpack', 'includereplace', 'uglify:minify', 'uglify:beautify']);
+    grunt.registerTask('dist', ['eslint', 'sync', 'build', 'bower-install-simple', 'bower', 'uglify:legacy']);
     grunt.registerTask('default', ['dist', 'mocha']);
     grunt.registerTask('release', ['sync', 'build', 'includereplace:build', 'uglify:release', 'jshint:release'])
 };
