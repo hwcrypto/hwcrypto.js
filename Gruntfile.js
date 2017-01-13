@@ -78,7 +78,10 @@ module.exports = function(grunt) {
                 options: {
                     prefix: '<!-- @@',
                     suffix: ' -->',
-                    includesDir: 'snippets/'
+                    includesDir: 'snippets/',
+                    globals: {
+                        hwcryptoversion: '<%= pkg.version %>'
+                    }
                 },
                 files: [
                     {src: 'sign.html', dest: 'dist/', expand: true, cwd: 'demo'},
@@ -92,6 +95,7 @@ module.exports = function(grunt) {
             test: {
                 src: ['dist/api.html'],
                 options: {
+                    ui: 'bdd',
                     log: true,
                     run: true,
                 },

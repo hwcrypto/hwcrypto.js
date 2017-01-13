@@ -21,7 +21,7 @@ function code2err(err) {
     return new Error(code2str.call(this, err))
 }
 
-const certificate_ids = []
+const certificate_ids = {}
 
 class DigiDocPlugin extends NotImplementedPlugin {
     static get _id() { return 'npapi' }
@@ -43,7 +43,7 @@ class DigiDocPlugin extends NotImplementedPlugin {
     }
 
     check() {
-        return Promise.resolve(typeof this.interface.version !== 'undefined')
+        return Promise.resolve(this.interface.version !== undefined)
     }
 
     getVersion() {

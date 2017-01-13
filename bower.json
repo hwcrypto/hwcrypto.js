@@ -34,7 +34,8 @@
     "jquery": "~1.11.2",
     "should": "~5.2.0",
     "chai-as-promised": "~4.3.0",
-    "bind-polyfill": "~1.0.0"
+    "bind-polyfill": "~1.0.0",
+    "promise-polyfill": "2.1.0"
   },
   "dependencies": {
     "native-promise-only": "~0.7.6-a",

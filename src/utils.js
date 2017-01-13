@@ -35,7 +35,7 @@ function _mimeid(mime) {
 
 function loadPluginFor(mime) {
     const element = _mimeid(mime)
-    if(document.getElementById(element)) {
+    if (document.getElementById(element)) {
         _debug("Plugin element already loaded")
         return document.getElementById(element)
     }

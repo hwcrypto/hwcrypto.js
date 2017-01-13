@@ -41,9 +41,7 @@ function _autodetect(force) {
         }, Promise.resolve(false))
     }
     function orUsePlaceholder(pluginFound) {
-        if (!pluginFound) {
-            return _testAndUse(NoBackend)
-        }
+        return pluginFound || _testAndUse(NoBackend)
     }
 
     return tryToApplyPlugin().then(orUsePlaceholder)
@@ -67,9 +65,15 @@ function _performCrypto(method, cert, hash, options = {}) {
         hash.hex = _array2hex(hash.value)
     }
 
-    return _autodetect().then(function(result) {
+    return _autodetect().then(function(backendFound) {
+        if (!backendFound) {
+            return Promise.reject(CONSTANTS.TECHNICAL_ERROR)
+        }
         if (location.protocol !== "https:" && location.protocol !== "file:") {
             return Promise.reject(new Error(CONSTANTS.NOT_ALLOWED))
+        }
+        if (!_backend[method]) {
+            return Promise.reject(CONSTANTS.NO_IMPLEMENTATION)
         }
         return _backend[method](cert, hash, options).then(function(signature) {
             if (signature.hex && !signature.value) {
@@ -88,15 +92,15 @@ class hwcrypto {
                     if (!result && Plugin._id === backend) {
                         return _testAndUse(Plugin)
                     } else {
-                        return false
+                        return result
                     }
                 })
             }, Promise.resolve(false))
         }
         function orUsePlaceholder(pluginFound) {
-            if (!pluginFound) {
-                return _testAndUse(NoBackend)
-            }
+            return pluginFound || _testAndUse(NoBackend).then(function () {
+                return false
+            })
         }
 
         switch (backend) {
@@ -130,7 +134,7 @@ class hwcrypto {
         return _autodetect().then(function(result) {
             // FIXME: dummy security check in website context
             if (location.protocol !== 'https:' && location.protocol !== 'file:') {
-                return Promise.reject(new Error(CONSTANTS.NOT_ALLOWED))
+                throw new Error(CONSTANTS.NOT_ALLOWED)
             }
 
             return _backend.getCertificate(options).then((certificate) => {
