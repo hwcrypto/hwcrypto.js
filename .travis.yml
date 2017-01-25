@@ -1,3 +1,14 @@
 language: node_js
 node_js: 6
 script: make
+deploy:
+  provider: releases
+  file:
+  - hwcrypto.js
+  - hwcrypto-legacy.js
+  api-key:
+    secure: J5mlNLYNj1Aq54NZJHd/nVBvJ9IA4fnztonyc5ieeYSD+ehhn1+P73+4g5iKlNWBycp2t4OcnDi7lKg80vey08+qdbRby1g/fWI3REnS4jV2QydNM8vICLYC2q8JsLkeUNzTKCnwLZNR52+D+HMoQ2ZsSxe9Ti25sLnt+YWf+c0=
+  skip_cleanup: true
+  on:
+    tags: true
+    repo: hwcrypto/hwcrypto.js
