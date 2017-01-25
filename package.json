@@ -1,11 +1,5 @@
 {
-  "name": "hwcrypto",
-  "main": "hwcrypto.js",
-  "version": "0.0.10",
-  "repository": {
-    "type": "git",
-    "url": "http://github.com/open-eid/hwcrypto.js.git"
-  },
+  "name": "hwcrypto-js",
   "devDependencies": {
     "bower": "^1.8.0",
     "grunt": "^1.0.1",
@@ -16,7 +10,6 @@
     "grunt-contrib-uglify": "^2.0.0",
     "grunt-include-replace": "^5.0.0",
     "grunt-mocha": "^1.0.2",
-    "grunt-sync-pkg": "^0.1.2",
     "phantomjs-prebuilt": "^2.1.14"
   }
 }

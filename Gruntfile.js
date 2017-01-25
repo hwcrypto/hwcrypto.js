@@ -1,9 +1,10 @@
 module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+        bowerpkg: grunt.file.readJSON('bower.json'),
         uglify: {
             options: {
-                banner: '/*! This is hwcrypto.js <%= pkg.version %> generated on <%= grunt.template.today("yyyy-mm-dd") %> */\n/* DO NOT EDIT (use src/hwcrypto.js) */\n',
+                banner: '/*! This is hwcrypto.js <%= bowerpkg.version %> generated on <%= grunt.template.today("yyyy-mm-dd") %> */\n/* DO NOT EDIT (use src/hwcrypto.js) */\n',
             },
             minify: {
                 src: 'build/hwcrypto.js',
@@ -29,7 +30,7 @@ module.exports = function(grunt) {
             },
             legacy: {
                 options: {
-                    banner: '/* Legacy dependencies for hwcrypto.js <%= pkg.version %> generated on <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+                    banner: '/* Legacy dependencies for hwcrypto.js <%= bowerpkg.version %> generated on <%= grunt.template.today("yyyy-mm-dd") %> */\n'
                 },
                 files: {
                     'dist/hwcrypto-legacy.js': ['bower_components/js-polyfills/typedarray.js',
@@ -49,7 +50,7 @@ module.exports = function(grunt) {
             build: {
                 options: {
                     globals: {
-                        hwcryptoversion: '<%= pkg.version %>'
+                        hwcryptoversion: '<%= bowerpkg.version %>'
                     }
                 },
                 files: [
@@ -104,8 +105,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-connect');
     // testing
     grunt.loadNpmTasks('grunt-mocha');
-    // version number syncing before releasing
-    grunt.loadNpmTasks('grunt-sync-pkg');
     // file templates
     grunt.loadNpmTasks('grunt-include-replace');
     // copy bower components
@@ -115,7 +114,7 @@ module.exports = function(grunt) {
 
     // Default task(s).
     grunt.registerTask('build', ['clean', 'jshint:src', 'includereplace', 'uglify:minify', 'uglify:beautify']);
-    grunt.registerTask('dist', ['sync', 'build', 'bower', 'uglify:legacy']);
+    grunt.registerTask('dist', ['build', 'bower', 'uglify:legacy']);
     grunt.registerTask('default', ['dist', 'mocha']);
-    grunt.registerTask('release', ['sync', 'build', 'includereplace:build', 'uglify:release', 'jshint:release'])
+    grunt.registerTask('release', ['build', 'includereplace:build', 'uglify:release', 'jshint:release'])
 };
