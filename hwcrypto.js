@@ -1,4 +1,4 @@
-/*! This is hwcrypto.js 0.0.10 generated on 2015-04-17 */
+/*! This is hwcrypto.js 0.0.11 generated on 2017-01-25 */
 /* DO NOT EDIT (use src/hwcrypto.js) */
 var hwcrypto = function hwcrypto() {
     "use strict";
@@ -6,14 +6,10 @@ var hwcrypto = function hwcrypto() {
     _debug("hwcrypto.js activated");
     window.addEventListener = window.addEventListener || window.attachEvent;
     function hasPluginFor(mime) {
-        if (navigator.mimeTypes && mime in navigator.mimeTypes) {
-            return true;
-        }
-        return false;
+        return navigator.mimeTypes && mime in navigator.mimeTypes;
     }
     function hasExtensionFor(cls) {
-        if (typeof window[cls] === "function") return true;
-        return false;
+        return typeof window[cls] === "function";
     }
     function _hex2array(str) {
         if (typeof str == "string") {
@@ -231,7 +227,7 @@ var hwcrypto = function hwcrypto() {
                 _debug("Assuming IE BHO, testing");
                 return tryDigiDocPlugin();
             }
-            if (navigator.userAgent.indexOf("Chrome") != -1 && hasExtensionFor(digidoc_chrome)) {
+            if (hasExtensionFor(digidoc_chrome)) {
                 _testAndUse(DigiDocExtension).then(function(result) {
                     if (result) {
                         resolve(true);
@@ -266,7 +262,7 @@ var hwcrypto = function hwcrypto() {
     };
     fields.debug = function() {
         return new Promise(function(resolve, reject) {
-            var hwversion = "hwcrypto.js 0.0.10";
+            var hwversion = "hwcrypto.js 0.0.11";
             _autodetect().then(function(result) {
                 _backend.getVersion().then(function(version) {
                     resolve(hwversion + " with " + _backend._name + " " + version);
