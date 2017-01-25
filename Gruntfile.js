@@ -33,7 +33,7 @@ module.exports = function(grunt) {
                     banner: '/* Legacy dependencies for hwcrypto.js <%= bowerpkg.version %> generated on <%= grunt.template.today("yyyy-mm-dd") %> */\n'
                 },
                 files: {
-                    'dist/hwcrypto-legacy.js': ['bower_components/js-polyfills/typedarray.js',
+                    'hwcrypto-legacy.js': ['bower_components/js-polyfills/typedarray.js',
                                                 'bower_components/native-promise-only/lib/npo.src.js']
                 }
             }
@@ -116,5 +116,5 @@ module.exports = function(grunt) {
     grunt.registerTask('build', ['clean', 'jshint:src', 'includereplace', 'uglify:minify', 'uglify:beautify']);
     grunt.registerTask('dist', ['build', 'bower', 'uglify:legacy']);
     grunt.registerTask('default', ['dist', 'mocha']);
-    grunt.registerTask('release', ['build', 'includereplace:build', 'uglify:release', 'jshint:release'])
+    grunt.registerTask('publish', ['build', 'includereplace:build', 'uglify:release', 'uglify:legacy', 'jshint:release'])
 };
