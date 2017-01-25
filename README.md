@@ -27,7 +27,7 @@ NOTE: The API makes use of [Promises](http://caniuse.com/#feat=promises) and [Ty
   - https://github.com/inexorabletash/polyfill (license: Public Domain / MIT)
   - https://github.com/getify/native-promise-only/ (license: MIT)
 
-Distribution and installation of the necessary platform components is out of scope of this project.
+Distribution and installation of any necessary backend components is out of scope of this project.
 
 ## Developer information 
 For further instructions on how to use the interface please have a look at [API specification v1](https://github.com/hwcrypto/hwcrypto.js/wiki/API)
