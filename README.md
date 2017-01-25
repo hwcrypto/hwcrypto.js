@@ -20,7 +20,7 @@ Latest version has built-in support for:
 Supports all [latest browsers](http://browsehappy.com/):
 - Chrome 40+
 - Firefox
-- IE 8+
+- IE 9+
 - Safari
 
 NOTE: The API makes use of [Promises](http://caniuse.com/#feat=promises) and [Typed Arrays](http://caniuse.com/#feat=typedarrays). Some browsers, notably older IE-s, require polyfills for them. Complimentary code is bundled into [`hwcrypto-legacy.js`](hwcrypto-legacy.js):
