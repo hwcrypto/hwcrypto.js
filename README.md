@@ -1,4 +1,4 @@
-# hwcrypto.js &nbsp;&nbsp; [![Bower version](https://badge.fury.io/bo/hwcrypto.svg)](http://bower.io/search/?q=hwcrypto) [![Build Status](https://travis-ci.org/hwcrypto/hwcrypto.js.svg?branch=master)](https://travis-ci.org/hwcrypto/hwcrypto.js)
+# hwcrypto.js &nbsp;&nbsp; [![Bower version](https://img.shields.io/bower/v/hwcrypto.svg)](http://bower.io/search/?q=hwcrypto) [![Build Status](https://travis-ci.org/hwcrypto/hwcrypto.js.svg?branch=master)](https://travis-ci.org/hwcrypto/hwcrypto.js)
 > Browser JavaScript library for working with hardware tokens
 
 ## Get started
