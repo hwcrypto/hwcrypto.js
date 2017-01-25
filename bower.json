@@ -4,11 +4,11 @@
     "hwcrypto.js",
     "hwcrypto-legacy.js"
   ],
-  "version": "0.0.10",
+  "version": "0.0.11",
   "authors": [
     "Martin Paljak <martin@martinpaljak.net>"
   ],
-  "description": "Polyfill for window.hwcrypto for signing with smart card extensions",
+  "description": "Browser JavaScript library for working with hardware tokens",
   "moduleType": [
     "globals"
   ],
@@ -16,10 +16,10 @@
     "smartcard"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/open-eid/hwcrypto.js.git",
+  "homepage": "https://hwcrypto.github.io",
   "repository": {
     "type": "git",
-    "url": "git://github.com/open-eid/hwcrypto.js.git"
+    "url": "https://github.com/hwcrypto/hwcrypto.js"
   },
   "ignore": [
     "**/.*",
