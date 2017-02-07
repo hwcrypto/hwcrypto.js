@@ -1,0 +1,70 @@
+# Browser Signing With hwcrypto.js
+# Source code of the sequence diagram
+# Made with free webtool: https://www.websequencediagrams.com/
+# 
+# Diagram can be viewed by copying this file into https://www.websequencediagrams.com/ dialog.
+# It's also possible to download PNG file from https://www.websequencediagrams.com/
+# (and possible to upload into this repository)
+#
+title Browser Signing With hwcrypto.js
+
+note left of WebApp:
+  Compose and display
+  web page where the
+  browser signing module
+  hwcrypto.js is loaded
+end note
+
+WebApp->hwcrypto.js: call getCertificate()
+
+hwcrypto.js->Browser plugin/extension:
+
+Browser plugin/extension->Signing token:
+
+note right of Signing token:
+  Read and return signing
+  certificate from signing token
+  connected to the user's
+  computer
+end note
+
+Signing token->Browser plugin/extension:
+Browser plugin/extension->hwcrypto.js:
+
+hwcrypto.js->WebApp:Return signer's certificate
+
+note left of WebApp:
+  Create BDOC container, prepare
+  signature XML structure and 
+  calculate the hash that is signed
+end note
+
+note left of WebApp:
+  Compose and display web page
+  with browser signing module and
+  hash to be signed
+end note
+
+WebApp->hwcrypto.js: call sign()
+
+hwcrypto.js->Browser plugin/extension:
+
+Browser plugin/extension->Signing token:
+
+note right of Signing token:
+  Send the hash to signing token
+  (e.g. smartcard) and return the
+  signature value
+end note
+
+Signing token->Browser plugin/extension:
+Browser plugin/extension->hwcrypto.js:
+
+hwcrypto.js->WebApp:Signature value
+
+note left of WebApp:
+  Compose the final BDOC
+  document by adding the RSA
+  signature value to the signature
+  XML structure
+end note
