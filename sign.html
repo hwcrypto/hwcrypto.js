@@ -21,6 +21,24 @@
     hashes['SHA-512'] = 'c793dc32d969cd4982a1d6e630de5aa0ebcd37e3b8bd0095f383a839582b080b9fe2d00098844bd303b8736ca1000344c5128ea38584bbed2d77a3968c7cdd71';
     hashes['SHA-192'] = 'ad41e82bcff23839dc0d9683d46fbae0be3dfcbbb1b49c70';
 
+    function base64url(data) {
+        return btoa(data).replace(/\+/g,'-').replace(/\//g,'_').replace(/\=+$/m,'');
+    }
+
+    function buf2hex(buffer) {
+        return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
+    }
+
+    function str2ab(str) {
+      return new TextEncoder("utf-8").encode(str);
+    }
+
+    function hexToBase64url(str) {
+      return base64url(String.fromCharCode.apply(null,
+        str.replace(/\r|\n/g, "").replace(/([\da-fA-F]{2}) ?/g, "0x$1 ").replace(/ +$/, "").split(" "))
+      );
+    }
+
     function log_text(s) {
       var d = document.createElement("div");
       d.innerHTML = s;
@@ -41,6 +59,8 @@
     var backend =  $("input[name=backend]:checked").val()
     // get language
     var lang = $("input[name=lang]:checked").val();
+    // get filter
+    var filter = $("input[name=filter]:checked").val();
     if (!window.hwcrypto.use(backend)) {
       log_text("Selecting backend failed.");
     }
@@ -55,14 +75,35 @@
       return;
     });
     // Sign
-    window.hwcrypto.getCertificate({lang: lang}).then(function(response) {
+    window.hwcrypto.getCertificate({lang: lang, filter: filter}).then(function(response) {
       var cert = response;
       log_text("Using certificate:\n" + hexToPem(response.hex));
-      window.hwcrypto.sign(cert, {type: hashtype, hex: hash}, {lang: lang}).then(function(response) {
-        log_text("Generated signature:\n" + response.hex.match(/.{1,64}/g).join("\n"));
-      }, function(err) {
-        log_text("sign() failed: " + err);
-      });
+      
+      if (filter == "AUTH") {
+        var header = JSON.stringify({alg: "RS" + hashtype.slice(-3), typ: "JWT"});
+        var claims = JSON.stringify({aud: location.origin, nonce: hash});
+        var dtbs = base64url(header) + "." + base64url(claims);
+        log_text("Data to be signed:\n" + dtbs);
+        window.crypto.subtle.digest({name: hashtype}, str2ab(dtbs)).then(function(hashToSign){
+          log_text("Hash to be signed:\n" + buf2hex(hashToSign));
+          window.hwcrypto.sign(cert, {type: hashtype, hex: buf2hex(hashToSign)}, {lang: lang, info: $("#info").val()}).then(function(response) {
+            var jwt = dtbs + "." + hexToBase64url(response.hex)
+            log_text("Generated signature:\n" + jwt.match(/.{1,64}/g).join("\n"));
+          }, function(err) {
+            log_text("sign() failed: " + err);
+          });
+        })
+        .catch(function(err){
+          log_text("sign() failed: " + err);
+        });
+      }
+      else {
+        window.hwcrypto.sign(cert, {type: hashtype, hex: hash}, {lang: lang, info: $("#info").val()}).then(function(response) {
+          log_text("Generated signature:\n" + response.hex.match(/.{1,64}/g).join("\n"));
+        }, function(err) {
+          log_text("sign() failed: " + err);
+        });
+      }
     }, function(err) {
       log_text("getCertificate() failed: " + err);
     });
@@ -110,13 +151,20 @@ Switch to:
      <input type="radio" name="hash" value="SHA-512">SHA-512 
      <input type="radio" name="hash" value="SHA-192">"SHA-192" (erronoeus) 
      <br/>
-     <input id="hashvalue" type="text" size="200">
+     <input id="hashvalue" type="text" size="200"><br />
+     <textarea id="info" rows="3">Sign transaction</textarea>
+   </li>
+   <li><b>CERTIFICATE</b>:
+     <input type="radio" name="filter" value="SIGN" checked>SIGN
+     <input type="radio" name="filter" value="AUTH">AUTH
    </li>
 
    <li><b>LANGUAGE</b>:
      <input type="radio" name="lang" value="en" checked>English
      <input type="radio" name="lang" value="et">eesti
      <input type="radio" name="lang" value="ru">русский
+     <input type="radio" name="lang" value="lt">lietuviešu
+     <input type="radio" name="lang" value="lv">latvijas
      <input type="radio" name="lang" value="sw">Swahili
    </li>
    <li><b>BACKEND</b>:
