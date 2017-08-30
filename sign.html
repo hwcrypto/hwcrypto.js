@@ -26,11 +26,22 @@
     }
 
     function buf2hex(buffer) {
-        return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
+        return Array.prototype.map.call(new Uint8Array(buffer.data), function(x) {
+            return ('00' + x.toString(16)).slice(-2);
+        }).join('');
+        //return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
     }
 
     function str2ab(str) {
-      return new TextEncoder("utf-8").encode(str);
+        if (window.TextEncoder) {
+            return new TextEncoder('utf-8').encode(str);
+        }
+        var utf8 = unescape(encodeURIComponent(str));
+        var result = new Uint8Array(utf8.length);
+        for (var i = 0; i < utf8.length; i++) {
+            result[i] = utf8.charCodeAt(i);
+        }
+        return result;
     }
 
     function hexToBase64url(str) {
@@ -84,18 +95,36 @@
         var claims = JSON.stringify({aud: location.origin, nonce: hash});
         var dtbs = base64url(header) + "." + base64url(claims);
         log_text("Data to be signed:\n" + dtbs);
-        window.crypto.subtle.digest({name: hashtype}, str2ab(dtbs)).then(function(hashToSign){
-          log_text("Hash to be signed:\n" + buf2hex(hashToSign));
-          window.hwcrypto.sign(cert, {type: hashtype, hex: buf2hex(hashToSign)}, {lang: lang, info: $("#info").val()}).then(function(response) {
+        var crypto = window.crypto || window.msCrypto;
+        var res = crypto.subtle.digest({name: hashtype}, str2ab(dtbs));
+        function hashToSign(hashToSign){
+          var hexCodes = [];
+          var view = new DataView(hashToSign);
+          for (var i = 0; i < view.byteLength; i += 4) {
+            var value = view.getUint32(i);
+            var stringValue = value.toString(16);
+            var padding = '00000000';
+            var paddedValue = (padding + stringValue).slice(-padding.length);
+            hexCodes.push(paddedValue);
+          }
+          var hexHashToSign = hexCodes.join('');
+          log_text("Hash to be signed:\n" + hexHashToSign);
+          window.hwcrypto.sign(cert, {type: hashtype, hex: hexHashToSign}, {lang: lang, info: $("#info").val()}).then(function(response) {
             var jwt = dtbs + "." + hexToBase64url(response.hex)
             log_text("Generated signature:\n" + jwt.match(/.{1,64}/g).join("\n"));
           }, function(err) {
             log_text("sign() failed: " + err);
           });
-        })
-        .catch(function(err){
-          log_text("sign() failed: " + err);
-        });
+        };
+        if (res.then) {
+          res.then(function (hash) {
+            hashToSign(hash);
+          });
+        } else { // IE11
+          res.oncomplete = function(e) {
+            hashToSign(e.target.result);
+          };
+        }
       }
       else {
         window.hwcrypto.sign(cert, {type: hashtype, hex: hash}, {lang: lang, info: $("#info").val()}).then(function(response) {
