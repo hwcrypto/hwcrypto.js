@@ -72,6 +72,10 @@
     var lang = $("input[name=lang]:checked").val();
     // get filter
     var filter = $("input[name=filter]:checked").val();
+    // get signature
+    var signtype = $("input[name=signature]:checked").val();
+    // get keytype
+    var keytype = $("input[name=keytype]:checked").val();
     if (!window.hwcrypto.use(backend)) {
       log_text("Selecting backend failed.");
     }
@@ -90,8 +94,8 @@
       var cert = response;
       log_text("Using certificate:\n" + hexToPem(response.hex));
       
-      if (filter == "AUTH") {
-        var header = JSON.stringify({alg: "RS" + hashtype.slice(-3), typ: "JWT"});
+      if (signtype == "jwt") {
+        var header = JSON.stringify({alg: keytype + hashtype.slice(-3), typ: "JWT"});
         var claims = JSON.stringify({aud: location.origin, nonce: hash});
         var dtbs = base64url(header) + "." + base64url(claims);
         log_text("Data to be signed:\n" + dtbs);
@@ -111,7 +115,7 @@
           log_text("Hash to be signed:\n" + hexHashToSign);
           window.hwcrypto.sign(cert, {type: hashtype, hex: hexHashToSign}, {lang: lang, info: $("#info").val()}).then(function(response) {
             var jwt = dtbs + "." + hexToBase64url(response.hex)
-            log_text("Generated signature:\n" + jwt.match(/.{1,64}/g).join("\n"));
+            log_text("Generated JWT signature:\n" + jwt.match(/.{1,64}/g).join("\n"));
           }, function(err) {
             log_text("sign() failed: " + err);
           });
@@ -181,7 +185,7 @@ Switch to:
      <input type="radio" name="hash" value="SHA-192">"SHA-192" (erronoeus) 
      <br/>
      <input id="hashvalue" type="text" size="200"><br />
-     <textarea id="info" rows="3">Sign transaction</textarea>
+     <textarea id="info" rows="3"></textarea>
    </li>
    <li><b>CERTIFICATE</b>:
      <input type="radio" name="filter" value="SIGN" checked>SIGN
@@ -200,6 +204,14 @@ Switch to:
      <input type="radio" name="backend" value="auto" checked>autodetect
      <input type="radio" name="backend" value="npapi">legacy NPAPI
      <input type="radio" name="backend" value="chrome">chrome-token-signing
+   </li>
+   <li><b>SIGNATURE</b>:
+     <input type="radio" name="signature" value="raw" checked>RAW
+     <input type="radio" name="signature" value="jwt">JWT
+   </li>
+   <li><b>Key type</b>:
+     <input type="radio" name="keytype" value="RS" checked>RSA
+     <input type="radio" name="keytype" value="ES">ECDSA
    </li>
    </ul>
    <p><button id="click1" onclick='sign();'>Click here to invoke <b>sign()</b></button></p>
