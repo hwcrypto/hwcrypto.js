@@ -129,7 +129,8 @@ var hwcrypto = (function hwcrypto() {
                 }
                 return new Promise(function(resolve, reject) {
                     try {
-                        var v = p.getCertificate();
+                        var ver = p.version.split(".");
+                        var v = (ver[0] >= 3 && ver[1] >= 13) ? p.getCertificate(options.filter) : p.getCertificate();
                         if(parseInt(p.errorCode) !== 0) {
                             reject(code2err(p.errorCode));
                         } else {
@@ -154,7 +155,9 @@ var hwcrypto = (function hwcrypto() {
                             //var v = p.sign(cid, hash, 'en'); // FIXME: only BHO requires language but does not use it
                             var language = options.lang || 'en';
                             //p.pluginLanguage = language;
-                            var v = p.sign(cid, hash.hex, language);
+                            var info = options.info || '';
+                            var ver = p.version.split(".");
+                            var v = (ver[0] >= 3 && ver[1] >= 13) ? p.sign(cid, hash.hex, language, info) : p.sign(cid, hash.hex, language);
                             resolve({
                                 hex: v
                             });
@@ -263,7 +266,7 @@ var hwcrypto = (function hwcrypto() {
                 return tryDigiDocPlugin();
             }
 
-            // Chrome extension or NPAPI
+            // Chrome/Firefox/Edge extension or NPAPI
             if (/*navigator.userAgent.indexOf("Chrome") != -1 &&*/ hasExtensionFor(digidoc_chrome)) {
                 _testAndUse(DigiDocExtension).then(function(result) {
                     if (result) {
