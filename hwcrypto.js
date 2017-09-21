@@ -1,4 +1,4 @@
-/*! This is hwcrypto.js 0.0.12 generated on 2017-08-30 */
+/*! This is hwcrypto.js 0.0.12 generated on 2017-09-21 */
 /* DO NOT EDIT (use src/hwcrypto.js) */
 
 var hwcrypto = function hwcrypto() {
@@ -75,7 +75,7 @@ var hwcrypto = function hwcrypto() {
                 return USER_CANCEL;
 
               case 2:
-                return INVALID_ARGUMENT;
+                return NO_CERTIFICATES;
 
               case 17:
                 return INVALID_ARGUMENT;
