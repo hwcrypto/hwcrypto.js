@@ -93,7 +93,7 @@ var hwcrypto = (function hwcrypto() {
                     case 1:
                         return USER_CANCEL;
                     case 2:
-                        return INVALID_ARGUMENT;
+                        return NO_CERTIFICATES;
                     case 17:
                         // invalid hash length
                         return INVALID_ARGUMENT;
