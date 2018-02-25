@@ -61,6 +61,7 @@ var hwcrypto = (function hwcrypto() {
     var USER_CANCEL = "user_cancel";
     var NO_CERTIFICATES = "no_certificates";
     var INVALID_ARGUMENT = "invalid_argument";
+    var DRIVER_ERROR = "driver_error";
     var TECHNICAL_ERROR = "technical_error";
     var NO_IMPLEMENTATION = "no_implementation";
     var NOT_ALLOWED = "not_allowed";
@@ -94,6 +95,8 @@ var hwcrypto = (function hwcrypto() {
                         return USER_CANCEL;
                     case 2:
                         return NO_CERTIFICATES;
+                    case 15:
+                        return DRIVER_ERROR;
                     case 17:
                         // invalid hash length
                         return INVALID_ARGUMENT;
