@@ -1,4 +1,4 @@
-/*! This is hwcrypto.js 0.0.12 generated on 2017-09-21 */
+/*! This is hwcrypto.js 0.0.13 generated on 2018-02-25 */
 /* DO NOT EDIT (use src/hwcrypto.js) */
 
 var hwcrypto = function hwcrypto() {
@@ -49,6 +49,7 @@ var hwcrypto = function hwcrypto() {
     var USER_CANCEL = "user_cancel";
     var NO_CERTIFICATES = "no_certificates";
     var INVALID_ARGUMENT = "invalid_argument";
+    var DRIVER_ERROR = "driver_error";
     var TECHNICAL_ERROR = "technical_error";
     var NO_IMPLEMENTATION = "no_implementation";
     var NOT_ALLOWED = "not_allowed";
@@ -76,6 +77,9 @@ var hwcrypto = function hwcrypto() {
 
               case 2:
                 return NO_CERTIFICATES;
+
+              case 15:
+                return DRIVER_ERROR;
 
               case 17:
                 return INVALID_ARGUMENT;
@@ -266,7 +270,7 @@ var hwcrypto = function hwcrypto() {
     };
     fields.debug = function() {
         return new Promise(function(resolve, reject) {
-            var hwversion = "hwcrypto.js 0.0.12";
+            var hwversion = "hwcrypto.js 0.0.13";
             _autodetect().then(function(result) {
                 _backend.getVersion().then(function(version) {
                     resolve(hwversion + " with " + _backend._name + " " + version);
