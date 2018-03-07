@@ -21,6 +21,44 @@
     hashes['SHA-512'] = 'c793dc32d969cd4982a1d6e630de5aa0ebcd37e3b8bd0095f383a839582b080b9fe2d00098844bd303b8736ca1000344c5128ea38584bbed2d77a3968c7cdd71';
     hashes['SHA-192'] = 'ad41e82bcff23839dc0d9683d46fbae0be3dfcbbb1b49c70';
 
+    function base64url(data) {
+        return btoa(data).replace(/\+/g,'-').replace(/\//g,'_').replace(/\=+$/m,'');
+    }
+
+    function ab2hex(buffer) {
+        var hexCodes = [];
+        var view = new DataView(buffer);
+        for (var i = 0; i < view.byteLength; i += 4) {
+            var value = view.getUint32(i);
+            var stringValue = value.toString(16);
+            var padding = '00000000';
+            var paddedValue = (padding + stringValue).slice(-padding.length);
+            hexCodes.push(paddedValue);
+        }
+        return hexCodes.join('');
+    }
+
+    function str2ab(str) {
+        if (window.TextEncoder) {
+            return new TextEncoder('utf-8').encode(str);
+        }
+        var utf8 = unescape(encodeURIComponent(str));
+        var result = new Uint8Array(utf8.length);
+        for (var i = 0; i < utf8.length; i++) {
+            result[i] = utf8.charCodeAt(i);
+        }
+        return result;
+    }
+
+    function hexToBin(str) {
+      return String.fromCharCode.apply(null,
+        str.replace(/\r|\n/g, "").replace(/([\da-fA-F]{2}) ?/g, "0x$1 ").replace(/ +$/, "").split(" "));
+    }
+
+    function wrapLine64(str) {
+        return str.match(/.{1,64}/g).join("\n");
+    }
+
     function log_text(s) {
       var d = document.createElement("div");
       d.innerHTML = s;
@@ -28,9 +66,10 @@
     }
 
     function debug() {
-    	window.hwcrypto.debug().then(function(response) {log_text("Debug: " + response);});
+        window.hwcrypto.debug().then(function(response) {log_text("Debug: " + response);});
     }
-    function sign() {
+
+  function sign() {
     // Clear log
     document.getElementById('log').innerHTML = '';
     // Timestamp
@@ -41,28 +80,64 @@
     var backend =  $("input[name=backend]:checked").val()
     // get language
     var lang = $("input[name=lang]:checked").val();
+    // get filter
+    var filter = $("input[name=filter]:checked").val();
+    // get signature
+    var signtype = $("input[name=signature]:checked").val();
     if (!window.hwcrypto.use(backend)) {
       log_text("Selecting backend failed.");
     }
 
-   var hash = $("#hashvalue").val();
-   log_text("Signing " + hashtype + ": " + hash);
+    var hash = $("#hashvalue").val();
+    log_text("Signing " + hashtype + ": " + hash);
     // debug
     window.hwcrypto.debug().then(function(response) {
       log_text("Debug: " + response);
     }, function(err) {
       log_text("debug() failed: " + err);
-      return;
     });
     // Sign
-    window.hwcrypto.getCertificate({lang: lang}).then(function(response) {
+    window.hwcrypto.getCertificate({lang: lang, filter: filter}).then(function(response) {
       var cert = response;
-      log_text("Using certificate:\n" + hexToPem(response.hex));
-      window.hwcrypto.sign(cert, {type: hashtype, hex: hash}, {lang: lang}).then(function(response) {
-        log_text("Generated signature:\n" + response.hex.match(/.{1,64}/g).join("\n"));
-      }, function(err) {
-        log_text("sign() failed: " + err);
-      });
+      log_text("Using certificate:\n" + hexToPem(cert.hex));
+
+      if (signtype == "jwt") {
+        var keytype = cert.hex.indexOf("2A8648CE3D0201") == -1 ? "RS" : "ES"; // ECDSA OID or RSA
+        var header = JSON.stringify({alg: keytype + hashtype.slice(-3), typ: "JWT"});
+        var claims = JSON.stringify({aud: location.origin, nonce: hash});
+        var dtbs = base64url(header) + "." + base64url(claims);
+        log_text("Data to be signed:\n" + wrapLine64(dtbs));
+
+        function hashToSign(hashToSign){
+          var hexHashToSign = ab2hex(hashToSign);
+          log_text("Hash to be signed:\n" + hexHashToSign);
+          window.hwcrypto.sign(cert, {type: hashtype, hex: hexHashToSign},
+              {lang: lang, info: $("#info").val()}).then(function(response) {
+            var jwt = dtbs + "." + base64url(hexToBin(response.hex));
+            log_text("Generated JWT signature:\n" + wrapLine64(jwt));
+          }, function(err) {
+            log_text("sign() failed: " + err);
+          });
+        };
+
+        var crypto = window.crypto || window.msCrypto;
+        var res = crypto.subtle.digest({name: "SHA-256"}, str2ab(dtbs));
+        if (res.then) {
+          res.then(hashToSign);
+        } else { // IE11
+          res.oncomplete = function(e) {
+            hashToSign(e.target.result);
+          };
+        }
+      }
+      else {
+        window.hwcrypto.sign(cert, {type: hashtype, hex: hash},
+            {lang: lang, info: $("#info").val()}).then(function(response) {
+          log_text("Generated signature:\n" + wrapLine64(response.hex));
+        }, function(err) {
+          log_text("sign() failed: " + err);
+        });
+      }
     }, function(err) {
       log_text("getCertificate() failed: " + err);
     });
@@ -83,7 +158,18 @@
     });
   </script>
   <div id="scripton" style="display: none">
-   <!-- @@include('toolbar.html') -->
+   <p>This is a
+   <b><script>document.write(window.location.protocol.substring(0, window.location.protocol.length-1).toUpperCase());</script></b> test page for 
+   <a href="hwcrypto.js">hwcrypto.js</a> (<a href="https://github.com/open-eid/hwcrypto.js/wiki">more information</a>)
+   implementing <a href="https://github.com/open-eid/hwcrypto.js/wiki/ModernAPI">API v0.1</a>
+</p>
+<p>
+Switch to: 
+  <a href="http://open-eid.github.io/hwcrypto.js/sign.html">HTTP</a> | <a href="https://open-eid.github.io/hwcrypto.js/sign.html">HTTPS</a>
+  | <a href="okbrowser.html">browser with module</a> | <a href="nokbrowser.html">browser without module</a> | <a href="success.html">success</a>  
+</p>
+<hr>
+
    <h1>sign()</h1>
    <p>You can get old NPAPI plugins from: <a href="https://installer.id.ee">installer.id.ee</a></p>
    <p><a href="https://chrome.google.com/webstore/detail/ckjefchnfjhjfedoccjbhjpbncimppeg">Install extension from chrome web store</a></p>
@@ -99,19 +185,30 @@
      <input type="radio" name="hash" value="SHA-512">SHA-512 
      <input type="radio" name="hash" value="SHA-192">"SHA-192" (erronoeus) 
      <br/>
-     <input id="hashvalue" type="text" size="200">
+     <input id="hashvalue" type="text" size="200"><br />
+     <textarea id="info" rows="3"></textarea>
+   </li>
+   <li><b>CERTIFICATE</b>:
+     <input type="radio" name="filter" value="SIGN" checked>SIGN
+     <input type="radio" name="filter" value="AUTH">AUTH
    </li>
 
    <li><b>LANGUAGE</b>:
      <input type="radio" name="lang" value="en" checked>English
      <input type="radio" name="lang" value="et">eesti
      <input type="radio" name="lang" value="ru">русский
+     <input type="radio" name="lang" value="lt">lietuviešu
+     <input type="radio" name="lang" value="lv">latvijas
      <input type="radio" name="lang" value="sw">Swahili
    </li>
    <li><b>BACKEND</b>:
      <input type="radio" name="backend" value="auto" checked>autodetect
      <input type="radio" name="backend" value="npapi">legacy NPAPI
      <input type="radio" name="backend" value="chrome">chrome-token-signing
+   </li>
+   <li><b>SIGNATURE</b>:
+     <input type="radio" name="signature" value="raw" checked>RAW
+     <input type="radio" name="signature" value="jwt">JWT
    </li>
    </ul>
    <p><button id="click1" onclick='sign();'>Click here to invoke <b>sign()</b></button></p>
