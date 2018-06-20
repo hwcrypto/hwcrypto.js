@@ -115,6 +115,7 @@
               {lang: lang, info: $("#info").val()}).then(function(response) {
             var jwt = dtbs + "." + base64url(hexToBin(response.hex));
             log_text("Generated JWT signature:\n" + wrapLine64(jwt));
+            log_text("<a href='https://jwt.io/#debugger-io?token="+jwt+"&publicKey="+encodeURIComponent(hexToPem(cert.hex))+"'>Validate signature</a>");
           }, function(err) {
             log_text("sign() failed: " + err);
           });
