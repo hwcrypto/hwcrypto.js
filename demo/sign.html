@@ -121,7 +121,7 @@
         };
 
         var crypto = window.crypto || window.msCrypto;
-        var res = crypto.subtle.digest({name: "SHA-256"}, str2ab(dtbs));
+        var res = crypto.subtle.digest({name: hashtype}, str2ab(dtbs));
         if (res.then) {
           res.then(hashToSign);
         } else { // IE11
@@ -182,7 +182,7 @@ Switch to:
      <input type="radio" name="hash" value="SHA-224">SHA-224
      <input type="radio" name="hash" value="SHA-256" checked>SHA-256
      <input type="radio" name="hash" value="SHA-384">SHA-384
-     <input type="radio" name="hash" value="SHA-512">SHA-512 
+     <input type="radio" name="hash" value="SHA-512">SHA-512
      <input type="radio" name="hash" value="SHA-192">"SHA-192" (erronoeus) 
      <br/>
      <input id="hashvalue" type="text" size="200"><br />
