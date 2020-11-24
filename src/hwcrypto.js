@@ -57,6 +57,7 @@ var hwcrypto = (function hwcrypto() {
         // Important constants
     var digidoc_mime = 'application/x-digidoc';
     var digidoc_chrome = 'TokenSigning';
+    var EXTENSION_CHECK_TIMEOUT = 1000;
     // Some error strings
     var USER_CANCEL = "user_cancel";
     var NO_CERTIFICATES = "no_certificates";
@@ -186,8 +187,21 @@ var hwcrypto = (function hwcrypto() {
                 }
                 // FIXME: remove this from content script!
                 p = new window[digidoc_chrome]();
+
                 if (p) {
-                    resolve(true);
+                    // The global TokenSigning function can be defined either by
+                    // the extension or, to workaround a CSP issue, by the website.
+                    // Requesting the extension version to make sure the extension is installed.
+                    var versionCheckTimeout = new Promise(function (resolve, reject) {
+                        setTimeout(reject, EXTENSION_CHECK_TIMEOUT);
+                    });
+
+                    resolve(
+                        Promise
+                        .race([ p.getVersion(), versionCheckTimeout ])
+                        .then(function () { return true; })
+                        .catch(function () { return false; })
+                    );
                 } else {
                     resolve(false);
                 }
