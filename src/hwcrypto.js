@@ -39,22 +39,23 @@ var hwcrypto = (function hwcrypto() {
     }
 
     function loadPluginFor(mime) {
-            var element = _mimeid(mime);
-            if(document.getElementById(element)) {
-                _debug("Plugin element already loaded");
-                return document.getElementById(element);
-            }
-            _debug('Loading plugin for ' + mime + ' into ' + element);
-            // Must insert tag as string (not as an Element object) so that IE9 can access plugin methods
-            var objectTag = '<object id="' + element + '" type="' + mime + '" style="width: 1px; height: 1px; position: absolute; visibility: hidden;"></object>';
-            var div = document.createElement("div");
-            div.setAttribute("id", 'pluginLocation' + element);
-            document.body.appendChild(div);
-            // Must not manipulate body's innerHTML directly, otherwise previous Element references get lost
-            document.getElementById('pluginLocation' + element).innerHTML = objectTag;
+        var element = _mimeid(mime);
+        if(document.getElementById(element)) {
+            _debug("Plugin element already loaded");
             return document.getElementById(element);
         }
-        // Important constants
+        _debug('Loading plugin for ' + mime + ' into ' + element);
+        // Must insert tag as string (not as an Element object) so that IE9 can access plugin methods
+        var objectTag = '<object id="' + element + '" type="' + mime + '" style="width: 1px; height: 1px; position: absolute; visibility: hidden;"></object>';
+        var div = document.createElement("div");
+        div.setAttribute("id", 'pluginLocation' + element);
+        document.body.appendChild(div);
+        // Must not manipulate body's innerHTML directly, otherwise previous Element references get lost
+        document.getElementById('pluginLocation' + element).innerHTML = objectTag;
+        return document.getElementById(element);
+    }
+
+    // Important constants
     var digidoc_mime = 'application/x-digidoc';
     var digidoc_chrome = 'TokenSigning';
     // Some error strings
@@ -67,16 +68,16 @@ var hwcrypto = (function hwcrypto() {
     var NOT_ALLOWED = "not_allowed";
     // Probe all existing backends in a failsafe manner.
     function probe() {
-            var msg = 'probe() detected ';
-            // First try Chrome extensions
-            if(hasExtensionFor(digidoc_chrome)) {
-                _debug(msg + digidoc_chrome);
-            }
-            if(hasPluginFor(digidoc_mime)) {
-                _debug(msg + digidoc_mime);
-            }
+        var msg = 'probe() detected ';
+        // First try Chrome extensions
+        if(hasExtensionFor(digidoc_chrome)) {
+            _debug(msg + digidoc_chrome);
         }
-        // TODO: remove
+        if(hasPluginFor(digidoc_mime)) {
+            _debug(msg + digidoc_mime);
+        }
+    }
+    // TODO: remove
     window.addEventListener('load', function(event) {
         // There's a timeout because chrome content script needs to be loaded
         probe();
