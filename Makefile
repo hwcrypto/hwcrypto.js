@@ -1,11 +1,11 @@
 default: bower_components
-	grunt
+	npx grunt
 
 node_modules:
 	npm install
 
 bower_components: node_modules
-	bower install
+	npx bower install
 
 publish: bower_components
 	grunt publish
