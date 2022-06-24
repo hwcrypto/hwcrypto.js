@@ -334,6 +334,18 @@ var hwcrypto = (function hwcrypto() {
             });
         });
     };
+	// Check for available backend
+    fields.hasBackend = function() {
+        return new Promise(function(resolve, reject) {
+            var hwversion = "hwcrypto.js @@hwcryptoversion";
+            if(!_backend) _autodetect();
+            _backend.getVersion().then(function(version) {
+                resolve(hwversion + " with " + _backend._name + " " + version);
+            }, function(error) {
+                reject(new Error(NO_IMPLEMENTATION));
+            });
+        });
+    };
     // Get a certificate
     fields.getCertificate = function(options) {
         if(typeof options !== 'object') {
